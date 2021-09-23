@@ -3944,26 +3944,9 @@ var default_layout = "default";
         console.log(e.response.data.message);
       });
     },
-    // Display the delete confirmation modal.
-    showDeleteModal: function showDeleteModal(quote) {
-      this.showModal = true;
-      this.current = quote;
-    },
     // Hide the delete confirmation modal.
     hideDeleteModal: function hideDeleteModal() {
       this.showModal = false;
-    },
-    // Delete a quote.
-    deleteQuote: function deleteQuote(id) {
-      var _this2 = this;
-
-      axios["delete"]('/quotes/' + id).then(function () {
-        _this2.hideDeleteModal();
-
-        _this2.getResults();
-      })["catch"](function (e) {
-        console.log(e.response.data.message);
-      });
     }
   }
 });
@@ -4306,11 +4289,6 @@ var default_layout = "default";
       var current = $('#image-preview').attr('src');
       $('#image-preview').attr('src', clicked);
       $(e.target).attr('src', current);
-    },
-    // Display the delete confirmation modal.
-    showDeleteModal: function showDeleteModal(quote) {
-      this.showModal = true;
-      this.current = quote;
     },
     // Hide the delete confirmation modal.
     hideDeleteModal: function hideDeleteModal() {
@@ -4745,11 +4723,6 @@ var default_layout = "default";
         }
       });
     },
-    // Display the delete confirmation modal.
-    showDeleteModal: function showDeleteModal(image) {
-      this.showModal = true;
-      this.current = image;
-    },
     // Hide the delete confirmation modal.
     hideDeleteModal: function hideDeleteModal() {
       this.showModal = false;
@@ -4765,7 +4738,7 @@ var default_layout = "default";
       });
     },
     // Navigate back to product view.
-    done: function done() {
+    goBack: function goBack() {
       window.location.hash = '#/products/' + this.id;
     }
   }
@@ -4895,24 +4868,6 @@ var default_layout = "default";
     this.getResults();
   },
   methods: {
-    // Get the request parameters for retrieving the products.
-    getRequestParams: function getRequestParams(search, pageSize, filter) {
-      var params = {};
-
-      if (search) {
-        params['search'] = search;
-      }
-
-      if (pageSize) {
-        params['size'] = pageSize;
-      }
-
-      if (filter) {
-        params['filter'] = filter;
-      }
-
-      return params;
-    },
     // Get the products.
     getResults: function getResults(page) {
       var _this = this;
@@ -4929,11 +4884,6 @@ var default_layout = "default";
       })["catch"](function (e) {
         console.log(e.response.data.message);
       });
-    },
-    // Get selected paginate value.
-    getSelectedPaginate: function getSelectedPaginate(e) {
-      this.pageSize = e.target.value;
-      this.getResults();
     },
     // Get selected filter value.
     getSelectedFilter: function getSelectedFilter(e) {
@@ -5187,7 +5137,7 @@ var default_layout = "default";
       this.emailSuccess = true;
       setTimeout(function () {
         _this5.emailSuccess = null;
-      }, 5000);
+      }, 3000);
     },
     // Display failed message for emailing.
     displayFailed: function displayFailed() {
@@ -5196,24 +5146,11 @@ var default_layout = "default";
       this.emailSuccess = false;
       setTimeout(function () {
         _this6.emailSuccess = null;
-      }, 5000);
-    },
-    // Display the delete confirmation modal.
-    showDeleteModal: function showDeleteModal(quote) {
-      this.showModal = true;
-      this.current = quote;
+      }, 3000);
     },
     // Hide the delete confirmation modal.
     hideDeleteModal: function hideDeleteModal() {
       this.showModal = false;
-    },
-    // Delete the quote.
-    deleteQuote: function deleteQuote(id) {
-      axios["delete"]('/quotes/' + id).then(function () {
-        window.location.hash = '#/quotes';
-      })["catch"](function (e) {
-        console.log(e.response.data.message);
-      });
     }
   }
 });
@@ -5317,58 +5254,17 @@ var default_layout = "default";
     this.getProducts();
   },
   methods: {
-    // Get the request parameters for retrieving the products.
-    getRequestParams: function getRequestParams(search) {
-      var params = {};
-
-      if (search) {
-        params['search'] = search;
-      }
-
-      return params;
-    },
-    // Gets the products.
-    getProducts: function getProducts() {
-      var _this = this;
-
-      axios.get('/products', {
-        'params': this.getRequestParams(this.search)
-      }).then(function (_ref) {
-        var data = _ref.data;
-        _this.product_items = data;
-      })["catch"](function (e) {
-        console.log(e.response.data.message);
-      });
-    },
-    // Adds overflow scroll to cart when height gets above 544px.
-    cartScroll: function cartScroll() {
-      var height = $('#item-list').height();
-
-      if (height >= 440) {
-        this.scroll = true;
-      } else {
-        this.scroll = false;
-      }
-    },
-    // Toggle between products and details.
-    toggleShow: function toggleShow() {
-      if (this.show_products) {
-        this.show_products = false;
-      } else {
-        this.show_products = true;
-      }
-    },
     // Adds item to cart.
     addToCart: function addToCart(product) {
-      var _this2 = this;
+      var _this = this;
 
       var id = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-      axios.post('/cart', this.cartData(id ? id : product.id)).then(function (_ref2) {
-        var data = _ref2.data;
-        _this2.cart = data[0];
-        _this2.subTotal = data[1];
+      axios.post('/cart', this.cartData(id ? id : product.id)).then(function (_ref) {
+        var data = _ref.data;
+        _this.cart = data[0];
+        _this.subTotal = data[1];
 
-        _this2.cartScroll();
+        _this.cartScroll();
       })["catch"](function (e) {
         console.log(e.response.data.message);
       });
@@ -5383,54 +5279,38 @@ var default_layout = "default";
     },
     // Decrease the quantity.
     decrement: function decrement(id) {
-      var _this3 = this;
+      var _this2 = this;
 
-      axios.patch('/cart/' + id, this.cartData(id)).then(function (_ref3) {
-        var data = _ref3.data;
-        _this3.cart = data[0];
-        _this3.subTotal = data[1];
+      axios.patch('/cart/' + id, this.cartData(id)).then(function (_ref2) {
+        var data = _ref2.data;
+        _this2.cart = data[0];
+        _this2.subTotal = data[1];
       })["catch"](function (e) {
         console.log(e.response.data.message);
       });
     },
     // Delete items from the cart.
     deleteFromCart: function deleteFromCart(id) {
-      var _this4 = this;
+      var _this3 = this;
 
       axios["delete"]('/cart/' + id, {
         data: {
           cart: this.cart,
           sub_total: this.subTotal
         }
-      }).then(function (_ref4) {
-        var data = _ref4.data;
-        _this4.cart = data[0];
-        _this4.subTotal = data[1];
+      }).then(function (_ref3) {
+        var data = _ref3.data;
+        _this3.cart = data[0];
+        _this3.subTotal = data[1];
 
-        _this4.cartScroll();
+        _this3.cartScroll();
       })["catch"](function (e) {
         console.log(e.response.data.message);
       });
     },
-    // Get the cart data.
-    cartData: function cartData(id) {
-      var data = {};
-      data['id'] = id;
-      data['cart'] = this.cart;
-      data['sub_total'] = this.subTotal;
-      return data;
-    },
-    // Generate the data from createQuote.
-    generateData: function generateData(cart, details) {
-      details['sub_total'] = this.subTotal;
-      var params = {};
-      params['cart'] = cart;
-      params['details'] = details;
-      return params;
-    },
     // Creates the final quote.
     createQuote: function createQuote() {
-      var _this5 = this;
+      var _this4 = this;
 
       axios.post('/quotes', {
         sub_total: this.subTotal,
@@ -5439,12 +5319,12 @@ var default_layout = "default";
         client_last_name: this.details.client_last_name,
         client_email: this.details.client_email,
         client_phone: this.details.client_phone
-      }).then(function (_ref5) {
-        var data = _ref5.data;
-        _this5.errors = [];
+      }).then(function (_ref4) {
+        var data = _ref4.data;
+        _this4.errors = [];
         window.location.hash = '#/quotes/' + data.id;
       })["catch"](function (e) {
-        _this5.errors = e.response.data.errors;
+        _this4.errors = e.response.data.errors;
       });
     }
   }
@@ -5552,16 +5432,6 @@ var default_layout = "default";
     this.getCrumbs();
   },
   methods: {
-    // Get the request parameters for retrieving the products.
-    getRequestParams: function getRequestParams(search) {
-      var params = {};
-
-      if (search) {
-        params['search'] = search;
-      }
-
-      return params;
-    },
     // Gets ID from URL and gets quote details.
     getQuotes: function getQuotes() {
       var _this = this;
@@ -5583,63 +5453,32 @@ var default_layout = "default";
         });
       });
     },
-    // Get list of products.
-    getProducts: function getProducts() {
-      var _this2 = this;
-
-      axios.get('/products', {
-        'params': this.getRequestParams(this.search)
-      }).then(function (_ref2) {
-        var data = _ref2.data;
-        _this2.product_items = data;
-      })["catch"](function (e) {
-        console.log(e.response.data.message);
-      });
-    },
     // Get the crumb text.
     getCrumbs: function getCrumbs() {
-      var _this3 = this;
+      var _this2 = this;
 
       this.crumbTags.push('#' + this.id);
       this.crumbTags.push('edit');
       axios.post('/crumbs', {
         crumbs: this.crumbTags
-      }).then(function (_ref3) {
-        var data = _ref3.data;
-        _this3.crumbTags = data;
+      }).then(function (_ref2) {
+        var data = _ref2.data;
+        _this2.crumbTags = data;
       })["catch"](function (e) {
         console.log(e.response.data);
       });
     },
-    // Adds overflow scroll to cart when height gets above 544px.
-    cartScroll: function cartScroll() {
-      var height = $('#item-list').height();
-
-      if (height > 440) {
-        this.scroll = true;
-      } else {
-        this.scroll = false;
-      }
-    },
-    // Toggle between products and details.
-    toggleShow: function toggleShow() {
-      if (this.show_products) {
-        this.show_products = false;
-      } else {
-        this.show_products = true;
-      }
-    },
     // Adds item to cart.
     addToCart: function addToCart(product) {
-      var _this4 = this;
+      var _this3 = this;
 
       var id = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-      axios.post('/cart', this.cartData(id ? id : product.id)).then(function (_ref4) {
-        var data = _ref4.data;
-        _this4.cart = data[0];
-        _this4.subTotal = data[1];
+      axios.post('/cart', this.cartData(id ? id : product.id)).then(function (_ref3) {
+        var data = _ref3.data;
+        _this3.cart = data[0];
+        _this3.subTotal = data[1];
 
-        _this4.cartScroll();
+        _this3.cartScroll();
       })["catch"](function (e) {
         console.log(e.response.data.message);
       });
@@ -5654,54 +5493,38 @@ var default_layout = "default";
     },
     // Decrement the quantity.
     decrease: function decrease(id) {
-      var _this5 = this;
+      var _this4 = this;
 
-      axios.patch('/cart/' + id, this.cartData(id)).then(function (_ref5) {
-        var data = _ref5.data;
-        _this5.cart = data[0];
-        _this5.subTotal = data[1];
+      axios.patch('/cart/' + id, this.cartData(id)).then(function (_ref4) {
+        var data = _ref4.data;
+        _this4.cart = data[0];
+        _this4.subTotal = data[1];
       })["catch"](function (e) {
         console.log(e.response.data.message);
       });
     },
     // Delete item from the shopping cart.
     deleteFromCart: function deleteFromCart(id) {
-      var _this6 = this;
+      var _this5 = this;
 
       axios["delete"]('/cart/' + id, {
         data: {
           cart: this.cart,
           sub_total: this.subTotal
         }
-      }).then(function (_ref6) {
-        var data = _ref6.data;
-        _this6.cart = data[0];
-        _this6.subTotal = data[1];
+      }).then(function (_ref5) {
+        var data = _ref5.data;
+        _this5.cart = data[0];
+        _this5.subTotal = data[1];
 
-        _this6.cartScroll();
+        _this5.cartScroll();
       })["catch"](function (e) {
         console.log(e.response.data.message);
       });
     },
-    // Get the cart data.
-    cartData: function cartData(id) {
-      var data = {};
-      data['id'] = id;
-      data['cart'] = this.cart;
-      data['sub_total'] = this.subTotal;
-      return data;
-    },
-    // Generate the data from updateQuote.
-    generateData: function generateData(cart, details) {
-      details['sub_total'] = this.subTotal;
-      var params = {};
-      params['cart'] = cart;
-      params['details'] = details;
-      return params;
-    },
     // Updates the quote.
     updateQuote: function updateQuote() {
-      var _this7 = this;
+      var _this6 = this;
 
       axios.patch('/quotes/' + this.id, {
         sub_total: this.subTotal,
@@ -5711,10 +5534,10 @@ var default_layout = "default";
         client_email: this.details.client_email,
         client_phone: this.details.client_phone
       }).then(function () {
-        _this7.errors = [];
-        window.location.hash = '#/quotes/' + _this7.id;
+        _this6.errors = [];
+        window.location.hash = '#/quotes/' + _this6.id;
       })["catch"](function (e) {
-        _this7.errors = e.response.data.errors;
+        _this6.errors = e.response.data.errors;
       });
     }
   }
@@ -5901,31 +5724,12 @@ var default_layout = "default";
     this.getResults();
   },
   methods: {
-    // Get the request parameters for the quotes.
-    getRequestParams: function getRequestParams(search, pageSize, sort_field) {
-      var params = {};
-
-      if (search) {
-        params['search'] = search;
-      }
-
-      if (pageSize) {
-        params['size'] = pageSize;
-      }
-
-      if (sort_field) {
-        params['sort_field'] = sort_field;
-        params['sort_direction'] = this.sort_direction;
-      }
-
-      return params;
-    },
     // Get the quotes list depending on the parameters provided.
     getResults: function getResults(page) {
       var _this = this;
 
       axios.get('/quotes?page=' + page, {
-        'params': this.getRequestParams(this.search, this.pageSize, this.sort_field)
+        'params': this.getRequestParams(this.search, this.pageSize, null, this.sort_field, this.sort_direction)
       }).then(function (_ref) {
         var data = _ref.data;
         _this.quote_list = data;
@@ -5936,11 +5740,6 @@ var default_layout = "default";
       })["catch"](function (e) {
         console.log(e.response.data.message);
       });
-    },
-    // Get the selected paginate value.
-    getSelected: function getSelected(e) {
-      this.pageSize = e.target.value;
-      this.getResults();
     },
     // Change the sort field / direction on table columns.
     changeSort: function changeSort(field) {
@@ -5958,26 +5757,9 @@ var default_layout = "default";
 
       this.getResults();
     },
-    // Display the delete confirmation modal.
-    showDeleteModal: function showDeleteModal(quote) {
-      this.showModal = true;
-      this.current = quote;
-    },
     // Hide the delete confirmation modal.
     hideDeleteModal: function hideDeleteModal() {
       this.showModal = false;
-    },
-    // Delete a quote.
-    deleteQuote: function deleteQuote(id) {
-      var _this2 = this;
-
-      axios["delete"]('/quotes/' + id).then(function () {
-        _this2.hideDeleteModal();
-
-        _this2.getResults();
-      })["catch"](function (e) {
-        console.log(e.response.data.message);
-      });
     }
   }
 });
@@ -6188,54 +5970,149 @@ vue__WEBPACK_IMPORTED_MODULE_2__.default.component('breadcrumb', __webpack_requi
 vue__WEBPACK_IMPORTED_MODULE_2__.default.component('delete', __webpack_require__(/*! ./views/components/DeleteComponent.vue */ "./resources/js/views/components/DeleteComponent.vue"));
 vue__WEBPACK_IMPORTED_MODULE_2__.default.component('details-tab', __webpack_require__(/*! ./views/quotes/components/DetailsTabComponent.vue */ "./resources/js/views/quotes/components/DetailsTabComponent.vue"));
 vue__WEBPACK_IMPORTED_MODULE_2__.default.component('products-tab', __webpack_require__(/*! ./views/quotes/components/ProductsTabComponent.vue */ "./resources/js/views/quotes/components/ProductsTabComponent.vue"));
+vue__WEBPACK_IMPORTED_MODULE_2__.default.mixin({
+  methods: {
+    // Display the delete confirmation modal.
+    showDeleteModal: function showDeleteModal(data) {
+      this.showModal = true;
+      this.current = data;
+    },
+    // Get selected paginate value.
+    getSelectedPaginate: function getSelectedPaginate(e) {
+      this.pageSize = e.target.value;
+      this.getResults();
+    },
+    // Gets the products.
+    getProducts: function getProducts() {
+      var _this = this;
+
+      axios.get('/products', {
+        'params': this.getRequestParams(this.search)
+      }).then(function (_ref) {
+        var data = _ref.data;
+        _this.product_items = data;
+      })["catch"](function (e) {
+        console.log(e.response.data.message);
+      });
+    },
+    // Get the request parameters for retrieving the products.
+    getRequestParams: function getRequestParams() {
+      var search = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+      var pageSize = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+      var filter = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+      var sort_field = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
+      var sort_direction = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
+      var params = {};
+
+      if (search) {
+        params['search'] = search;
+      }
+
+      if (pageSize) {
+        params['size'] = pageSize;
+      }
+
+      if (filter) {
+        params['filter'] = filter;
+      }
+
+      if (sort_field) {
+        params['sort_field'] = sort_field;
+        params['sort_direction'] = sort_direction;
+      }
+
+      return params;
+    },
+    // Delete the quote.
+    deleteQuote: function deleteQuote(id) {
+      var _this2 = this;
+
+      axios["delete"]('/quotes/' + id).then(function () {
+        if (window.location.hash === '#/quotes/' + id) {
+          window.location.hash = '#/quotes';
+        } else {
+          _this2.hideDeleteModal();
+
+          _this2.getResults();
+        }
+      })["catch"](function (e) {
+        console.log(e.response.data.message);
+      });
+    },
+    // Adds overflow scroll to cart when height gets above 544px.
+    cartScroll: function cartScroll() {
+      var height = $('#item-list').height();
+
+      if (height >= 440) {
+        this.scroll = true;
+      } else {
+        this.scroll = false;
+      }
+    },
+    // Toggle between products and details.
+    toggleShow: function toggleShow() {
+      if (this.show_products) {
+        this.show_products = false;
+      } else {
+        this.show_products = true;
+      }
+    },
+    // Get the cart data.
+    cartData: function cartData(id) {
+      var data = {};
+      data['id'] = id;
+      data['cart'] = this.cart;
+      data['sub_total'] = this.subTotal;
+      return data;
+    },
+    // Generate the data from createQuote.
+    generateData: function generateData(cart, details) {
+      details['sub_total'] = this.subTotal;
+      var params = {};
+      params['cart'] = cart;
+      params['details'] = details;
+      return params;
+    }
+  },
+  filters: {
+    ucFirstLetter: function ucFirstLetter(value) {
+      if (value) {
+        return value.charAt(0).toUpperCase() + value.slice(1);
+      }
+
+      return null;
+    },
+    priceFormat: function priceFormat(value) {
+      if (value) {
+        return value.toLocaleString("en-GB", {
+          style: "currency",
+          currency: "GBP",
+          currencyDisplay: 'symbol',
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        });
+      }
+    },
+    dateFormat: function dateFormat(value) {
+      if (value) {
+        var date = new Date(value);
+        var options = {
+          weekday: 'short',
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'
+        };
+        var formatted_date = date.toLocaleDateString('en-GB', options);
+        var formatted_time = date.toLocaleTimeString('en-GB');
+        return formatted_time + ' on ' + formatted_date;
+      }
+    }
+  }
+});
 var app = new vue__WEBPACK_IMPORTED_MODULE_2__.default({
   el: '#app',
   router: _routes__WEBPACK_IMPORTED_MODULE_1__.default
 });
-vue__WEBPACK_IMPORTED_MODULE_2__.default.filter('ucFirstLetter', function (value) {
-  if (value) {
-    return value.charAt(0).toUpperCase() + value.slice(1);
-  }
-
-  return null;
-});
-vue__WEBPACK_IMPORTED_MODULE_2__.default.filter('dateFormat', function (value) {
-  if (value) {
-    var date = new Date(value);
-    var options = {
-      weekday: 'short',
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    };
-    var formatted_date = date.toLocaleDateString('en-GB', options);
-    var formatted_time = date.toLocaleTimeString('en-GB');
-    return formatted_time + ' on ' + formatted_date;
-  }
-});
-vue__WEBPACK_IMPORTED_MODULE_2__.default.filter('priceFormat', function (value) {
-  if (value) {
-    return value.toLocaleString("en-GB", {
-      style: "currency",
-      currency: "GBP",
-      currencyDisplay: 'symbol',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    });
-  }
-}); // Vue.mixin({
-//     methods: {
-//         // Display the delete confirmation modal.
-//         showDeleteModal(data) {
-//             this.showModal = true;
-//             this.current = data;
-//         },
-//         // Hide the delete confirmation modal.
-//         hideDeleteModal() {
-//             this.showModal = false;
-//         }
-//     }
-// });
 
 /***/ }),
 
@@ -26304,7 +26181,11 @@ var render = function() {
               "button",
               {
                 staticClass: "w-32 py-2 bg-red-500 text-white rounded-md mx-8",
-                on: { click: _vm.goBack }
+                on: {
+                  click: function($event) {
+                    return _vm.goBack(_vm.id)
+                  }
+                }
               },
               [_vm._v("Cancel")]
             ),
@@ -26554,7 +26435,7 @@ var render = function() {
           "button",
           {
             staticClass: "w-32 py-2 bg-green-500 text-white rounded-md mx-8",
-            on: { click: _vm.done }
+            on: { click: _vm.goBack }
           },
           [_vm._v("Done")]
         )
@@ -27924,7 +27805,7 @@ var render = function() {
                 attrs: { name: "pagination", id: "pagination" },
                 on: {
                   change: function($event) {
-                    return _vm.getSelected($event)
+                    return _vm.getSelectedPaginate($event)
                   }
                 }
               },

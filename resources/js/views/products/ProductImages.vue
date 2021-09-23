@@ -63,7 +63,7 @@
         </div>
         
         <div class="max-w-7xl mx-auto flex justify-end px-2">
-            <button @click="done" class="w-32 py-2 bg-green-500 text-white rounded-md mx-8">Done</button>
+            <button @click="goBack" class="w-32 py-2 bg-green-500 text-white rounded-md mx-8">Done</button>
         </div>
     </div>
 </template>
@@ -168,12 +168,6 @@ export default {
                 })
         },
 
-        // Display the delete confirmation modal.
-        showDeleteModal(image) {
-            this.showModal = true;
-            this.current   = image;
-        },
-
         // Hide the delete confirmation modal.
         hideDeleteModal() {
             this.showModal = false;
@@ -189,7 +183,7 @@ export default {
         },
 
         // Navigate back to product view.
-        done() {
+        goBack() {
             window.location.hash = '#/products/' + this.id;
         }
     }

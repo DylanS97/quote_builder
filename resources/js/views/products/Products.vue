@@ -116,23 +116,6 @@ export default {
     },
 
     methods: {
-        // Get the request parameters for retrieving the products.
-        getRequestParams(search, pageSize, filter) {
-            let params = {};
-
-            if (search) {
-                params['search'] = search;
-            }
-            if (pageSize) {
-                params['size']   = pageSize;
-            }
-            if (filter) {
-                params['filter'] = filter;
-            }
-
-            return params;
-        },
-
         // Get the products.
         getResults(page) {
             axios.get('/products?page=' + page, {
@@ -148,12 +131,6 @@ export default {
                 .catch((e) => {
                     console.log(e.response.data.message);
                 })
-        },
-        
-        // Get selected paginate value.
-        getSelectedPaginate(e) {
-            this.pageSize = e.target.value;
-            this.getResults();
         },
 
         // Get selected filter value.

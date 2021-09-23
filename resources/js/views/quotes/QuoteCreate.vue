@@ -93,48 +93,6 @@ export default {
     },
 
     methods: {
-        // Get the request parameters for retrieving the products.
-        getRequestParams(search) {
-            let params = {};
-
-            if (search) {
-                params['search'] = search;
-            }
-
-            return params;
-        },
-
-        // Gets the products.
-        getProducts() {
-            axios.get('/products', {
-                'params': this.getRequestParams(this.search)
-            })
-                .then(({data}) => {
-                    this.product_items = data;
-                })
-                .catch((e) => {
-                    console.log(e.response.data.message);
-                })
-        },
-
-        // Adds overflow scroll to cart when height gets above 544px.
-        cartScroll() {
-            let height = $('#item-list').height();
-            if(height >= 440) {
-                this.scroll = true;
-            } else {
-                this.scroll = false;
-            }
-        },
-
-        // Toggle between products and details.
-        toggleShow() {
-            if (this.show_products) {
-                this.show_products = false;
-            } else {
-                this.show_products = true;
-            }
-        },
 
         // Adds item to cart.
         addToCart(product, id = null) {
@@ -183,27 +141,6 @@ export default {
                 .catch((e) => {
                     console.log(e.response.data.message);
                 })
-        },
-
-        // Get the cart data.
-        cartData(id) {
-            let data          = {};
-            data['id']        = id;
-            data['cart']      = this.cart;
-            data['sub_total'] = this.subTotal;
-
-            return data;
-        },
-
-        // Generate the data from createQuote.
-        generateData(cart, details) {
-            details['sub_total'] = this.subTotal;
-
-            let params        = {};
-            params['cart']    = cart;
-            params['details'] = details;
-
-            return params;
         },
 
         // Creates the final quote.

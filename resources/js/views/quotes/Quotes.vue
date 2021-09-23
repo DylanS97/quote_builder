@@ -18,7 +18,7 @@
 
         <div class="max-w-7xl mx-auto p-10 pb-0 flex justify-between">
             <div class="">
-                <select @change="getSelected($event)" name="pagination" id="pagination" class="rounded-md cursor-pointer">
+                <select @change="getSelectedPaginate($event)" name="pagination" id="pagination" class="rounded-md cursor-pointer">
                     <option v-for="size in pageSizes" :key="size" :value="size">
                         {{ size }}
                     </option>
@@ -172,28 +172,10 @@ export default {
     },
 
     methods: {
-        // Get the request parameters for the quotes.
-        getRequestParams(search, pageSize, sort_field) {
-            let params = {};
-
-            if (search) {
-                params['search'] = search;
-            }
-            if (pageSize) {
-                params['size'] = pageSize;
-            }
-            if (sort_field) {
-                params['sort_field']     = sort_field;
-                params['sort_direction'] = this.sort_direction;
-            }
-
-            return params;
-        },
-
         // Get the quotes list depending on the parameters provided.
         getResults(page) {
             axios.get('/quotes?page=' + page, {
-                'params': this.getRequestParams(this.search, this.pageSize, this.sort_field)
+                'params': this.getRequestParams(this.search, this.pageSize, null, this.sort_field, this.sort_direction)
             })
                 .then(({data}) => {
                     this.quote_list  = data;
@@ -205,12 +187,6 @@ export default {
                 .catch((e) => {
                     console.log(e.response.data.message);
                 })
-        },
-
-        // Get the selected paginate value.
-        getSelected(e) {
-            this.pageSize = e.target.value;
-            this.getResults();
         },
 
         // Change the sort field / direction on table columns.
@@ -229,27 +205,9 @@ export default {
             this.getResults();
         },
 
-        // Display the delete confirmation modal.
-        showDeleteModal(quote) {
-            this.showModal = true;
-            this.current   = quote;
-        },
-
         // Hide the delete confirmation modal.
         hideDeleteModal() {
             this.showModal = false;
-        },
-
-        // Delete a quote.
-        deleteQuote(id) {
-            axios.delete('/quotes/' + id)
-                .then(() => {
-                    this.hideDeleteModal();
-                    this.getResults();
-                })
-                .catch((e) => {
-                    console.log(e.response.data.message);
-                })
         }
     }
 };

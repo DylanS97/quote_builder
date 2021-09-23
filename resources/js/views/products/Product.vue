@@ -157,12 +157,6 @@ export default {
             $(e.target).attr('src', current);
         },
 
-        // Display the delete confirmation modal.
-        showDeleteModal(quote) {
-            this.showModal = true;
-            this.current   = quote;
-        },
-
         // Hide the delete confirmation modal.
         hideDeleteModal() {
             this.showModal = false;

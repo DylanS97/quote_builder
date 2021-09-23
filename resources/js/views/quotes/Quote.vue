@@ -234,7 +234,7 @@ export default {
 
             setTimeout(() => {
                 this.emailSuccess = null;
-            }, 5000);
+            }, 3000);
         },
 
         // Display failed message for emailing.
@@ -243,29 +243,12 @@ export default {
 
             setTimeout(() => {
                 this.emailSuccess = null;
-            }, 5000);
-        },
-
-        // Display the delete confirmation modal.
-        showDeleteModal(quote) {
-            this.showModal = true;
-            this.current   = quote;
+            }, 3000);
         },
 
         // Hide the delete confirmation modal.
         hideDeleteModal() {
             this.showModal = false;
-        },
-
-        // Delete the quote.
-        deleteQuote(id) {
-            axios.delete('/quotes/' + id)
-                .then(() => {
-                    window.location.hash = '#/quotes';
-                })
-                .catch((e) => {
-                    console.log(e.response.data.message);
-                })
         }
     }
 };

@@ -1,6 +1,6 @@
 <template>
     <div class="contents">
-        
+
         <confirmDelete :data="current" v-show="showModal" :deleteData="deleteQuote" :hideDeleteModal="hideDeleteModal"></confirmDelete>
         
         <!-- Page Heading -->
@@ -142,27 +142,9 @@ export default {
                 })
         },
 
-        // Display the delete confirmation modal.
-        showDeleteModal(quote) {
-            this.showModal = true;
-            this.current   = quote;
-        },
-
         // Hide the delete confirmation modal.
         hideDeleteModal() {
             this.showModal = false;
-        },
-
-        // Delete a quote.
-        deleteQuote(id) {
-            axios.delete('/quotes/' + id)
-                .then(() => {
-                    this.hideDeleteModal();
-                    this.getResults();
-                })
-                .catch((e) => {
-                    console.log(e.response.data.message);
-                })
         }
     }
 };
