@@ -14,13 +14,14 @@
         </div>
 
         <div class="max-w-7xl mx-auto p-10 pb-0 flex justify-between">
-            <div class="">
+            <div>
                 <select @change="getSelectedPaginate($event)" name="pagination" id="pagination" class="rounded-md cursor-pointer">
                     <option v-for="size in pageSizes" :key="size" :value="size">
                         {{ size }}
                     </option>
                 </select>
             </div>
+
             <div class="flex">
                 <div class="mx-3">
                     <select @change="getSelectedFilter($event)" name="category" id="category" class="rounded-md">
@@ -82,35 +83,36 @@
 </template>
 
 <script>
-import breadcrumb from './components/BreadcrumbComponent.vue';
+import breadcrumb from '../components/BreadcrumbComponent.vue';
 const default_layout = "default";
 
 export default {
     components: { breadcrumb },
     data() {
         return {
-            heading: 'Products',
+            heading:       'Products',
             product_items: [],
-            data_length: 0,
-            image: '',
-            meta: {},
-            pageSize: 10,
-            search: '',
-            pageSizes: [10, 25, 50, 100, 250, 500],
-            filter: '',
-            processed: false,
-            crumbs: [
-                'home',
-                'products'
+            data_length:   0,
+            image:         '',
+            meta:          {},
+            pageSize:      10,
+            search:        '',
+            pageSizes:     [10, 25, 50, 100, 250, 500],
+            filter:        '',
+            processed:     false,
+            crumbs:        [
+                                'home',
+                                'products'
             ],
-            crumbTags: []
+            crumbTags:     [
+                                'Home',
+                                'Products'
+            ]
         }
     },
 
     created() {
         this.getResults();
-
-        this.getCrumbs();
     },
 
     methods: {
@@ -122,7 +124,7 @@ export default {
                 params['search'] = search;
             }
             if (pageSize) {
-                params['size'] = pageSize;
+                params['size']   = pageSize;
             }
             if (filter) {
                 params['filter'] = filter;
@@ -138,26 +140,13 @@ export default {
             })
                 .then(({data}) => {
                     this.product_items = data.data;
-                    this.meta = data.meta;
-                    this.pageSize = data.meta.per_page;
-                    this.data_length = this.product_items.length;
-                    this.processed = true;
+                    this.meta          = data.meta;
+                    this.pageSize      = data.meta.per_page;
+                    this.data_length   = this.product_items.length;
+                    this.processed     = true;
                 })
                 .catch((e) => {
                     console.log(e.response.data.message);
-                })
-        },
-
-        // Get the crumb links text.
-        getCrumbs() {
-            axios.post('/crumbs', {
-                crumbs: this.crumbs
-            })
-                .then(({data}) => {
-                    this.crumbTags = data;
-                })
-                .catch((e) => {
-                    console.log(e.response.data);
                 })
         },
         

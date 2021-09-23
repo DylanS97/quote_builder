@@ -46,12 +46,6 @@
 export default {
     props: ['meta'],
 
-    data() {
-        return {
-
-        }
-    },
-
     methods: {
         changePage(page) {
             if(page <= 0 || page > this.meta.last_page) {

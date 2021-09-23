@@ -8,6 +8,12 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
+    protected $products;
+
+    public function __construct(Product $products)
+    {
+        $this->products = $products;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -15,33 +21,27 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->search && $request->size) {
-            // return paginated results that match the search parameter.
-            return new ProductResource(
-                Product::with('images')
-                    ->where('name', 'LIKE', '%' . $request->search . '%')
-                    ->orderBy('created_at', $request->filter ? $request->filter : 'ASC')
-                    ->paginate($request->size ? $request->size : 10)
-            );
-        } else if ($request->search) {
-            // return results that match the search parameter. Un-paginated.
-            return Product::with('images')
-                ->where('name', 'LIKE', '%' . $request->search . '%')
-                ->orderBy('name', 'ASC')
-                ->get();
-        } else if ($request->size) {
-            // return paginated results.
-            return new ProductResource(
-                Product::with('images')
-                    ->orderBy('created_at', $request->filter ? $request->filter : 'ASC')
-                    ->paginate($request->size ? $request->size : 10)
-            );
-        } else {
-            // return products for quote create page.
-            return Product::with('images')
-                ->orderBy('name', 'ASC')
-                ->get();
+        $query = $this->products->query();
+
+        $query->with('images');
+
+        if ($request->search) {
+            $query->where('name', 'LIKE', "%$request->search%");
         }
+
+        if ($request->filter) {
+            $query->orderBy('created_at', $request->filter);
+        } else {
+            $query->orderBy('name');
+        }
+
+        if ($request->size) {
+            return new ProductResource(
+                $query->paginate($request->size)
+            );
+        }
+
+        return $query->get();
     }
 
     /**
@@ -54,7 +54,7 @@ class ProductController extends Controller
     {
         $attributes = $this->validateForm($request);
 
-        return Product::create($attributes);
+        return $this->products->create($attributes);
     }
 
     /**
@@ -65,7 +65,7 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        $product = Product::with('images')->find($id);
+        $product = $this->products->with('images')->find($id);
 
         return $product;
     }
@@ -81,7 +81,7 @@ class ProductController extends Controller
     {
         $attributes = $this->validateForm($request, $id);
 
-        Product::find($id)->update($attributes);
+        $this->products->find($id)->update($attributes);
     }
 
     /**
@@ -92,7 +92,7 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        $product = Product::find($id);
+        $product = $this->products->find($id);
         $product->images()->delete();
         $product->delete();
     }
@@ -105,9 +105,9 @@ class ProductController extends Controller
      */
     protected function validateForm($request, $id = null) {
         return $this->validate($request, [
-            'name' => $id ? 'sometimes|required|string|unique:products,name,'.$id : 'required|string|unique:products',
+            'name'        => $id ? 'sometimes|required|string|unique:products,name,'.$id : 'required|string|unique:products',
             'description' => 'required|min:20|max:1000',
-            'price' => 'required|regex:^[1-9][0-9]+^|not_in:0'
+            'price'       => 'required|regex:^[1-9][0-9]+^|not_in:0'
         ]);
     }
 }

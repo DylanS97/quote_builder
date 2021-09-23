@@ -23,8 +23,6 @@ Route::get('/login', function() {
     return view('auth.login');
 });
 
-// Route::delete('/images/{id}/delete', [ProductImageController::class, 'destroy'])->middleware(['auth']);
-
 Route::resource('quotes', QuoteController::class)->middleware(['auth']);
 
 Route::resource('products', ProductController::class)->middleware(['auth']);
@@ -38,6 +36,10 @@ Route::resource('crumbs', CrumbsController::class)->middleware(['auth']);
 Route::get('{id}/images', [ProductImageController::class, 'index'])->middleware(['auth']);
 
 Route::post('{id}/images/create', [ProductImageController::class, 'store'])->middleware(['auth']);
+
+Route::get('mail-quote/{id}', [QuoteController::class, 'mailQuote'])->middleware(['auth']);
+
+Route::patch('/quote-completed/{id}', [QuoteController::class, 'updateCompleted'])->middleware(['auth']);
 
 Route::get('/{any}', [PagesController::class, 'index'])->middleware(['auth'])->where('any', '.*');
 

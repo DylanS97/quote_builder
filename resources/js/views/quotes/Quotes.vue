@@ -1,6 +1,8 @@
 <template>
     <div class="width-full">
+        
         <confirmDelete :data="current" v-show="showModal" :deleteData="deleteQuote" :hideDeleteModal="hideDeleteModal"></confirmDelete>
+        
         <!-- Page Heading -->
         <header class="bg-white shadow">
             <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
@@ -42,31 +44,37 @@
                     <tr>
                         <th @click="changeSort('id')" class="border border-gray-300 p-2 cursor-pointer">
                             <span class="font-medium">ID</span>
+                            <i v-if="sort_field != 'id'" class="fas fa-sort text-gray-300 ml-2"></i>
                             <i v-if="sort_field === 'id' && sort_direction === 'DESC'" class="fas fa-caret-down ml-2"></i>
                             <i v-if="sort_field === 'id' && sort_direction === 'ASC'" class="fas fa-caret-up ml-2"></i>
                         </th>
                         <th @click="changeSort('client_first_name')" class="border border-gray-300 p-2 cursor-pointer">
                             <span class="font-medium">Client Name</span>
+                            <i v-if="sort_field != 'client_first_name'" class="fas fa-sort text-gray-300 ml-2"></i>
                             <i v-if="sort_field === 'client_first_name' && sort_direction === 'DESC'" class="fas fa-caret-down ml-2"></i>
                             <i v-if="sort_field === 'client_first_name' && sort_direction === 'ASC'" class="fas fa-caret-up ml-2"></i>
                         </th>
                         <th @click="changeSort('total')" class="border border-gray-300 p-2 cursor-pointer">
                             <span class="font-medium">Total Price</span>
+                            <i v-if="sort_field != 'total'" class="fas fa-sort text-gray-300 ml-2"></i>
                             <i v-if="sort_field === 'total' && sort_direction === 'DESC'" class="fas fa-caret-down ml-2"></i>
                             <i v-if="sort_field === 'total' && sort_direction === 'ASC'" class="fas fa-caret-up ml-2"></i>
                         </th>
                         <th @click="changeSort('created_at')" class="border border-gray-300 p-2 cursor-pointer">
                             <span class="font-medium">Created at</span>
+                            <i v-if="sort_field != 'created_at'" class="fas fa-sort text-gray-300 ml-2"></i>
                             <i v-if="sort_field === 'created_at' && sort_direction === 'DESC'" class="fas fa-caret-down ml-2"></i>
                             <i v-if="sort_field === 'created_at' && sort_direction === 'ASC'" class="fas fa-caret-up ml-2"></i>
                         </th>
                         <th @click="changeSort('updated_at')" class="border border-gray-300 p-2 cursor-pointer">
                             <span class="font-medium">updated at</span>
+                            <i v-if="sort_field != 'updated_at'" class="fas fa-sort text-gray-300 ml-2"></i>
                             <i v-if="sort_field === 'updated_at' && sort_direction === 'DESC'" class="fas fa-caret-down ml-2"></i>
                             <i v-if="sort_field === 'updated_at' && sort_direction === 'ASC'" class="fas fa-caret-up ml-2"></i>
                         </th>
                         <th @click="changeSort('completed')" class="border border-gray-300 p-2 cursor-pointer">
                             <span class="font-medium">Completed</span>
+                            <i v-if="sort_field != 'completed'" class="fas fa-sort text-gray-300 ml-2"></i>
                             <i v-if="sort_field === 'completed' && sort_direction === 'DESC'" class="fas fa-caret-down ml-2"></i>
                             <i v-if="sort_field === 'completed' && sort_direction === 'ASC'" class="fas fa-caret-up ml-2"></i>
                         </th>
@@ -127,39 +135,40 @@
 </template>
 
 <script>
+import breadcrumb from '../components/BreadcrumbComponent.vue';
+import confirmDelete from '../components/DeleteComponent.vue';
 const default_layout = "default";
-import breadcrumb from './components/BreadcrumbComponent.vue';
-import confirmDelete from './components/DeleteComponent.vue';
 
 export default {
     components: { breadcrumb, confirmDelete },
 
     data() {
         return {
-            heading: 'Quotes',
-            quote_list: [],
-            data_length: 0,
-            meta: {},
-            pageSize: 10,
-            pageSizes: [10, 25, 50, 100, 250, 500],
-            search: "",
-            sort_field: 'created_at',
+            heading:        'Quotes',
+            quote_list:     [],
+            data_length:    0,
+            meta:           {},
+            pageSize:       10,
+            pageSizes:      [10, 25, 50, 100, 250, 500],
+            search:         '',
+            sort_field:     'created_at',
             sort_direction: 'DESC',
-            processed: false,
-            crumbs: [
-                'home',
-                'quotes'
+            processed:      false,
+            crumbs:         [
+                                'home',
+                                'quotes'
             ],
-            crumbTags: [],
-            showModal: false,
-            current: null
+            crumbTags:      [
+                                'Home',
+                                'Quotes'
+            ],
+            showModal:      false,
+            current:        null
         }
     },
 
     created() {
         this.getResults();
-
-        this.getCrumbs();
     },
 
     methods: {
@@ -174,7 +183,7 @@ export default {
                 params['size'] = pageSize;
             }
             if (sort_field) {
-                params['sort_field'] = sort_field;
+                params['sort_field']     = sort_field;
                 params['sort_direction'] = this.sort_direction;
             }
 
@@ -187,27 +196,14 @@ export default {
                 'params': this.getRequestParams(this.search, this.pageSize, this.sort_field)
             })
                 .then(({data}) => {
-                    this.quote_list = data;
-                    this.meta = data.meta;
-                    this.pageSize = data.meta.per_page;
+                    this.quote_list  = data;
+                    this.meta        = data.meta;
+                    this.pageSize    = data.meta.per_page;
                     this.data_length = this.quote_list.data.length;
-                    this.processed = true;
+                    this.processed   = true;
                 })
                 .catch((e) => {
                     console.log(e.response.data.message);
-                })
-        },
-
-        // Get the crumb links text.
-        getCrumbs() {
-            axios.post('/crumbs', {
-                crumbs: this.crumbs
-            })
-                .then(({data}) => {
-                    this.crumbTags = data;
-                })
-                .catch((e) => {
-                    console.log(e.response.data);
                 })
         },
 
@@ -236,7 +232,7 @@ export default {
         // Display the delete confirmation modal.
         showDeleteModal(quote) {
             this.showModal = true;
-            this.current = quote;
+            this.current   = quote;
         },
 
         // Hide the delete confirmation modal.

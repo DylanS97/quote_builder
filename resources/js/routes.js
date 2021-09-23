@@ -12,47 +12,47 @@ const routes = [
     {
         path: '/quotes',
         name: 'quotes',
-        components: require('./views/Quotes')
+        components: require('./views/quotes/Quotes')
     },
     {
         path: '/quotes/:id',
         name: 'quote',
-        components: require('./views/Quote')
+        components: require('./views/quotes/Quote')
     },
     {
         path: '/quote/create',
         name: 'quote_create',
-        components: require('./views/QuoteCreate')
+        components: require('./views/quotes/QuoteCreate')
     },
     {
         path: '/quotes/:id/edit',
         name: 'quote_edit',
-        components: require('./views/QuoteEdit')
+        components: require('./views/quotes/QuoteEdit')
     },
     {
         path: '/products',
         name: 'products',
-        components: require('./views/Products')
+        components: require('./views/products/Products')
     },
     {
         path: '/products/:id',
         name: 'product',
-        components: require('./views/Product')
+        components: require('./views/products/Product')
     },
     {
         path: '/product/create',
         name: 'product_create',
-        components: require('./views/ProductCreate')
+        components: require('./views/products/ProductCreate')
     },
     {
         path: '/products/:id/edit',
         name: 'product_edit',
-        components: require('./views/ProductEdit')
+        components: require('./views/products/ProductEdit')
     },
     {
         path: '/products/:id/images',
         name: 'product_images',
-        components: require('./views/ProductImages')
+        components: require('./views/products/ProductImages')
     },
 ];
 

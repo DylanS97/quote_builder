@@ -1,6 +1,8 @@
 <template>
     <div class="width-full">
+
         <confirmDelete :data="current" v-show="showModal" :deleteData="deleteImage" :hideDeleteModal="hideDeleteModal"></confirmDelete>
+        
         <!-- Page Heading -->
         <header class="bg-white shadow">
             <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
@@ -33,8 +35,8 @@
                     <div class="field-container h-12">
                         <input class="field rounded-md" id="alt" type="text" v-model="alt" placeholder=" ">
                         <label class="label bg-white top-3" for="alt">Alt</label>
-                        <span v-if="errors.alt && alt === ''" class="text-red-500">{{ errors.alt[0] }}</span>
                     </div>
+                    <span v-if="errors.alt && alt === ''" class="text-red-500">{{ errors.alt[0] }}</span>
                 </div>
                 <button class="flex-1 float-right px-4 py-3 bg-green-500 rounded-md text-white">Add Image</button>
             </form>
@@ -67,38 +69,38 @@
 </template>
 
 <script>
-import breadcrumb from './components/BreadcrumbComponent.vue';
-import confirmDelete from './components/DeleteComponent.vue';
+import breadcrumb from '../components/BreadcrumbComponent.vue';
+import confirmDelete from '../components/DeleteComponent.vue';
 const default_layout = "default";
 
 export default {
     components: { breadcrumb, confirmDelete },
     data() {
         return {
-            heading: 'Edit Images',
-            id: '',
-            images: {},
-            source: null,
-            alt: '',
-            crumbs: [
-                'home',
-                'products',
-                'product',
-                'product_images'
+            heading:  'Edit Images',
+            id:        '',
+            images:    {},
+            source:    null,
+            alt:       '',
+            crumbs:    [
+                            'home',
+                            'products',
+                            'product',
+                            'product_images'
             ],
             crumbTags: [
-                'home',
-                'products'
+                            'home',
+                            'products'
             ],
-            errors: [],
+            errors:    [],
             showModal: false,
-            current: null
+            current:   null
         }
     },
 
     created() {
         const url = new URL(window.location.href);
-        this.id = url.hash.match(/(\d+)/)[0];
+        this.id   = url.hash.match(/(\d+)/)[0];
 
         this.getImages();
     },
@@ -109,9 +111,9 @@ export default {
             axios.get('/products/' + this.id)
                 .then(({data}) => {
                     this.images = data['images'];
+
                     this.crumbTags.push(data['name']);
                     this.crumbTags.push('images');
-
                     this.getCrumbs();
                 })
                 .catch((e) => {
@@ -135,9 +137,10 @@ export default {
         // Preciew uploaded image.
         imageSelected(e) {
             this.source = e.target.files[0];
+            let reader  = new FileReader();
 
-            let reader = new FileReader();
             reader.readAsDataURL(this.source);
+
             reader.onload = e => {
                 $('#preview-image').attr('src', e.target.result);
             };
@@ -151,9 +154,12 @@ export default {
 
             axios.post(this.id + '/images/create', data)
                 .then(() => {
-                    this.alt = '';
-                    this.getImages();
                     this.errors = [];
+                    $('#preview-image').attr('src', 'storage/images/ph.jpg');
+                    $('#image-input').val('');
+                    console.log($('#image-input')[0]);
+                    this.alt    = '';
+                    this.getImages();
                 })
                 .catch(e => {
                     if (e.response) {
@@ -165,7 +171,7 @@ export default {
         // Display the delete confirmation modal.
         showDeleteModal(image) {
             this.showModal = true;
-            this.current = image;
+            this.current   = image;
         },
 
         // Hide the delete confirmation modal.

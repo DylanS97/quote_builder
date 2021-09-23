@@ -5,10 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\Quote;
 use Illuminate\Http\Request;
 use App\Http\Resources\QuoteResource;
+use App\Mail\MailQuote;
 use App\Models\ProductQuote;
+use Illuminate\Support\Facades\Mail;
 
 class QuoteController extends Controller
 {
+    protected $quotes;
+
+    public function __construct(Quote $quotes) 
+    {
+        $this->quotes = $quotes;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -16,26 +25,25 @@ class QuoteController extends Controller
      */
     public function index(Request $request)
     {
+        $query = $this->quotes->query();
+
         if ($request->search) {
-            return new QuoteResource(
-                Quote::where('client_first_name', 'LIKE', '%' . $request->search . '%')
-                    ->orWhere('client_last_name', 'LIKE', '%' . $request->search . '%')
-                    ->orWhere('id', 'LIKE', '%' . $request->search . '%')
-                    ->orWhere('created_at', 'LIKE', '%'. $request->search . '%')
-                    ->orWhere('updated_at', 'LIKE', '%' . $request->search . '%')
-                    ->orderBy($request->sort_field, $request->sort_direction)
-                    ->paginate($request->size ? $request->size : 10)
-            );
-        } else if ($request->size) {
-            return new QuoteResource(
-                Quote::orderBy($request->sort_field, $request->sort_direction)
-                    ->paginate($request->size ? $request->size : 10)
-            );
-        } else {
-            return Quote::orderBy('created_at', 'DESC')
-                ->limit(5)
-                ->get();
+            $query->where('client_first_name', 'LIKE', "%{$request->search}%");
+            $query->orWhere('id', 'LIKE', "%{$request->search}%");
+            $query->orWhere('created_at', 'LIKE', "%{$request->search}%");
+            $query->orWhere('updated_at', 'LIKE', "%{$request->search}%");
         }
+
+        if ($request->size) {
+            $query->orderBy($request->sort_field, $request->sort_direction);
+
+            return new QuoteResource($query->paginate($request->size));
+        }
+
+        // If no size available - then on homepage.
+        return $this->quotes->orderBy('created_at', 'DESC')
+            ->limit(5)
+            ->get();
     }
 
     /**
@@ -48,7 +56,7 @@ class QuoteController extends Controller
     {
         $quote = $this->updateOrCreateQuote($request);
 
-        return Quote::with('products')->find($quote->id);
+        return $this->quotes->with('products')->find($quote->id);
     }
 
     /**
@@ -59,7 +67,7 @@ class QuoteController extends Controller
      */
     public function show($id)
     {
-        return Quote::with('products')->find($id);
+        return $this->quotes->with('products')->find($id);
     }
 
     /**
@@ -69,16 +77,26 @@ class QuoteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Quote $quote)
     {
-        $quote = Quote::with('products')->findOrFail($id);
-
-        if ($request->completed || $request->completed === 0) {
-            $this->updateCompleted($request->completed, $quote);
+        if ($request->completed == true) {
+            $this->updateCompleted($quote);
         } else {
             $this->updateOrCreateQuote($request, $quote);
         }
         
+        return $quote;
+    }
+
+    /**
+     * Update the completed status of a Quote.
+     *
+     * @param  object $quote
+     */
+    public function updateCompleted($id)
+    {
+        $quote = $this->quotes->with('products')->find($id);
+        $quote->update(['completed' => $quote->completed === 1 ? 0 : 1]);
         return $quote;
     }
 
@@ -88,12 +106,24 @@ class QuoteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Quote $quote)
     {
-        $quote = Quote::find($id);
-
         $quote->products()->delete();
         $quote->delete();
+    }
+
+    /**
+     * Emails quote to the customer.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function mailQuote($id) {
+        $quote = $this->quotes->with('products')->findOrFail($id);
+        
+        Mail::to($quote->client_email)->send(new MailQuote($quote));
+        
+        return 'Successful';
     }
 
     /**
@@ -106,9 +136,9 @@ class QuoteController extends Controller
     {
         return $this->validate($request, [
             'client_first_name' => 'required|alpha|max:256',
-            'client_last_name' => 'required|alpha|max:256',
-            'client_phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
-            'client_email' => 'required|email',
+            'client_last_name'  => 'required|alpha|max:256',
+            'client_phone'      => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+            'client_email'      => 'required|email',
         ]);
     }
 
@@ -126,21 +156,6 @@ class QuoteController extends Controller
     }
 
     /**
-     * Update the completed status of a Quote.
-     *
-     * @param  int  $value
-     * @param  object $quote
-     */
-    protected function updateCompleted($value, $quote)
-    {
-        if ($value === 1) {
-            $quote->update(['completed' => true]);
-        } else if ($value === 0) {
-            $quote->update(['completed' => false]);
-        }
-    }
-
-    /**
      * Update or Create a Quote.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -152,30 +167,27 @@ class QuoteController extends Controller
         $products = $this->validateCart($request);
         $details = $this->validateDetails($request);
 
+        $details['sub_total']     = $request->sub_total;
+        $details['sub_total_vat'] = $details['sub_total'] * 0.2;
+        $details['total']         = $details['sub_total'] + $details['sub_total_vat'];
+
         if ($quote != null) {
             // Update
-            $details['completed'] = $quote->completed;
-            $details['sub_total'] = $request->sub_total;
-            $details['sub_total_vat'] = $details['sub_total'] * 0.2;
-            $details['total'] = $details['sub_total'] + $details['sub_total_vat'];
+            $details['completed']     = $quote->completed;
     
             $quote->update($details);
             $quote->products()->delete();
 
-            $this->updateQuoteProducts($quote, $products);
         } else {
             // Create
-            $details['completed'] = false;
-            $details['sub_total'] = $request->sub_total;
-            $details['sub_total_vat'] = $details['sub_total'] * 0.2;
-            $details['total'] = $details['sub_total'] + $details['sub_total_vat'];
+            $details['completed']     = false;
     
-            $quote = Quote::create($details);
-
-            $this->updateQuoteProducts($quote, $products);
-
-            return $quote;
+            $quote = $this->quotes->create($details);
         }
+
+        $this->updateQuoteProducts($quote, $products);
+
+        return $quote;
     }
 
     /**
@@ -187,7 +199,7 @@ class QuoteController extends Controller
     protected function updateQuoteProducts($quote, $products)
     {
         foreach ($products['cart'] as $id => $product) {
-            $product['quote_id'] = $quote->id;
+            $product['quote_id']   = $quote->id;
             $product['product_id'] = $id;
 
             ProductQuote::create($product);

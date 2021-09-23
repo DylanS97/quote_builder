@@ -1,10 +1,12 @@
 <template>
     <div class="flex-1 flex flex-col p-3 height-100% shadow-2xl bg-gray-100 rounded-md mx-w-800px">
         <slot></slot>
+
         <div class="flex-1 overflow-y-scroll">
             <div v-if="product_items.length === 0" class="text-center p-6">
                 <span class="text-2xl text-gray-400">No products to display</span>
             </div>
+
             <div class="grid grid-cols-3">
                 <div class="product p-2 rounded-md m-2 shadow-lg bg-white" 
                      v-for="(product, index) in product_items" :key="index">
@@ -37,7 +39,6 @@ export default {
     name: 'productTab',
 
     props: [
-        'getProducts',
         'product_items',
         'addToCart'
     ]

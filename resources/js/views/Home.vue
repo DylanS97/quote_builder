@@ -1,6 +1,8 @@
 <template>
     <div class="contents">
+        
         <confirmDelete :data="current" v-show="showModal" :deleteData="deleteQuote" :hideDeleteModal="hideDeleteModal"></confirmDelete>
+        
         <!-- Page Heading -->
         <header class="bg-white shadow">
             <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
@@ -15,7 +17,7 @@
         </div>
 
         <div class="max-w-7xl px-10 mx-auto">
-            <div class="">
+            <div>
                 <div class="relative z-20 w-200">
                     <h1 class="text-md font-medium px-6 py-4 my-6 rounded-2xl bg-white border border-gray-2500 w-full text-center">
                         Recently Created
@@ -23,6 +25,7 @@
                     <div class="absolute arrow box-30px bg-white border-r border-b border-gray-250"></div>
                 </div>
             </div>
+
             <div class="pb-8">
                 <div class="rounded-md full-shadow p-6">
                     <div v-if="processed === false" class="">
@@ -69,6 +72,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="flex">
                 <router-link :to="{ name: 'quote_create' }" class="py-8 pr-8 flex-1">
                     <div class="rounded-md full-shadow p-6 py-10 text-center text-xl">
@@ -80,6 +84,7 @@
                         </div>
                     </div>
                 </router-link>
+
                 <router-link :to="{ name: 'products' }" class="py-8 pl-8 flex-1">
                     <div class="rounded-md full-shadow p-6 py-10 text-center text-xl">
                         <div class="p-4">
@@ -104,29 +109,23 @@ export default {
   components: { breadcrumb, confirmDelete },
     data() {
         return {
-            heading: 'Home',
-            quote_list: [],
+            heading:     'Home',
+            quote_list:  [],
             data_length: 0,
-            processed: false,
-            crumbs: [
-                'home'
+            processed:   false,
+            crumbs:      [
+                              'home'
             ],
-            crumbTags: [],
-            showModal: false,
-            current: null
-        }
-    },
-
-    filters: {
-        lessThan: function(value) {
-            if (value >= 5) return;
+            crumbTags:   [
+                              'Home'
+            ],
+            showModal:   false,
+            current:     null
         }
     },
 
     created() {
         this.getResults();
-
-        this.getCrumbs();
     },
 
     methods: {
@@ -134,22 +133,9 @@ export default {
         getResults() {
             axios.get('/quotes')
                 .then(({data}) => {
-                    this.quote_list = data
+                    this.quote_list  = data
                     this.data_length = this.quote_list.length;
-                    this.processed = true;
-                })
-                .catch((e) => {
-                    console.log(e.response.data.message);
-                })
-        },
-
-        // Get the crumb links text.
-        getCrumbs() {
-            axios.post('/crumbs', {
-                crumbs: this.crumbs
-            })
-                .then(({data}) => {
-                    this.crumbTags = data;
+                    this.processed   = true;
                 })
                 .catch((e) => {
                     console.log(e.response.data.message);
@@ -159,7 +145,7 @@ export default {
         // Display the delete confirmation modal.
         showDeleteModal(quote) {
             this.showModal = true;
-            this.current = quote;
+            this.current   = quote;
         },
 
         // Hide the delete confirmation modal.

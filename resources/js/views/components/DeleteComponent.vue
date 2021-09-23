@@ -1,5 +1,5 @@
 <template>
-    <div class="fixed top-0 left-0 h-screen w-screen z-50">
+    <div class="absolute top-0 left-0 h-screen w-screen z-50">
         <div class="fixed top-0 left-0 h-screen w-screen bg-gradient-shadow"></div>
         <div class="center-screen flex flex-col justify-between p-6 rounded-md text-center">
             <h2 class="text-2xl mt-4 font-medium">Are You Sure?</h2>

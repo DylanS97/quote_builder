@@ -1,6 +1,8 @@
 <template>
     <div class="width-full">
+
         <confirmDelete :data="product" v-show="showModal" :deleteData="deleteProduct" :hideDeleteModal="hideDeleteModal"></confirmDelete>
+        
         <!-- Page Heading -->
         <header class="bg-white shadow">
             <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
@@ -9,7 +11,6 @@
                 </h2>
             </div>
         </header>
-
 
         <div class="max-w-7xl mx-auto p-10">
             <div class="flex justify-between">
@@ -28,6 +29,7 @@
                     </router-link>
                 </div>
             </div>
+
             <div class="flex min-h-300">
                 <div class="flex-1 shadow-xl bg-white rounded-md m-3 ml-0 p-4 pl-0 relative">
                     <div class="p-2 mb-4 bg-gray-300 pl-4 w-52 relative border-t border-b border-gray-600 overflow-hidden">
@@ -45,6 +47,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="flex-1 shadow-xl bg-white rounded-md m-3 mr-0 p-4 pl-0">
                     <div class="p-2 mb-4 bg-gray-300 pl-4 w-52 relative border-t border-b border-gray-600 overflow-hidden">
                         <h1 class="text-lg font-normal">Images</h1>
@@ -56,11 +59,14 @@
                             <img @load="getHeight" v-if="imageTotal > 0" id="image-preview" class="w-full h-auto" :src="'/storage/product_images/' + product.images[0].source" :alt="product.images[0].alt">
                         </div>
                         <div id="image-scroll" v-if="imageTotal > 1" class="overflow-y-scroll px-2 h-50" style="width: 150px;">
-                            <img class="cursor-pointer my-1" @click="imageSwap" v-for="(image, index) in product.images" :key="index" v-if="index > 0" :src="'/storage/product_images/' + image.source" :alt="image.alt">
+                            <div class="" v-for="(image, index) in product.images" :key="index">
+                                <img v-if="index >= 1" class="cursor-pointer my-1" @click="imageSwap" :src="'/storage/product_images/' + image.source" :alt="image.alt">
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+
             <div class="w-100 shadow-xl bg-white rounded-md mt-3 p-4 pl-0">
                 <div class="p-2 mb-6 bg-gray-300 pl-4 w-56 relative border-t border-b border-gray-600 overflow-hidden">
                     <h1 class="text-lg font-normal">Description</h1>
@@ -75,8 +81,8 @@
 </template>
 
 <script>
-import breadcrumb from './components/BreadcrumbComponent.vue';
-import confirmDelete from './components/DeleteComponent.vue';
+import breadcrumb from '../components/BreadcrumbComponent.vue';
+import confirmDelete from '../components/DeleteComponent.vue';
 const default_layout = "default";
 
 export default {
@@ -84,32 +90,33 @@ export default {
 
     data() {
         return {
-            id: '',
-            product: [],
-            form: [],
+            id:         '',
+            product:    [],
+            form:       [],
             imageTotal: 0,
-            crumbs: [
-                'home',
-                'products',
-                'product'
+            crumbs:     [
+                            'home',
+                            'products',
+                            'product'
             ],
-            crumbTags: [
-                'home',
-                'products'
+            crumbTags:  [
+                            'home',
+                            'products'
             ],
-            showModal: false
+            showModal:  false
         }
     },
 
     created() {
         const url = new URL(window.location.href);
-        this.id = url.hash.match(/(\d+)/)[0];
+        this.id   = url.hash.match(/(\d+)/)[0];
+
         axios('/products/' + this.id)
             .then(({data}) => {
-                this.product = data;
-                this.crumbTags.push(data['name']);
+                this.product    = data;
                 this.imageTotal = this.count(data.images);
 
+                this.crumbTags.push(data['name']);
                 this.getCrumbs();
             })
             
@@ -137,6 +144,7 @@ export default {
         // Get the height for scrollable image div to the same height as the preview image.
         getHeight() {
             let height = $('#image-preview').css('height');
+
             $('#image-scroll').height(height);
         },
 
@@ -146,14 +154,13 @@ export default {
             let current = $('#image-preview').attr('src');
 
             $('#image-preview').attr('src', clicked);
-
             $(e.target).attr('src', current);
         },
 
         // Display the delete confirmation modal.
         showDeleteModal(quote) {
             this.showModal = true;
-            this.current = quote;
+            this.current   = quote;
         },
 
         // Hide the delete confirmation modal.

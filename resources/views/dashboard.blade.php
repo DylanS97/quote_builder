@@ -1,5 +1,5 @@
 <x-app-layout>
     
-    <router-view></router-view>
+    <router-view class="h-screen overflow-auto"></router-view>
     
 </x-app-layout>

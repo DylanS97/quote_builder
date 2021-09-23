@@ -23,6 +23,7 @@
                         </div>
                         <span v-if="errors.name" class="text-red-500">{{ errors.name[0] }}</span>
                     </div>
+                    
                     <div class="flex-1 px-4 mb-4">
                         <div class="field-container h-14 w-100">
                             <input class="field rounded-md font-light" type="text" placeholder=" " id="price" v-model="price">
@@ -31,6 +32,7 @@
                         <span v-if="errors.price" class="text-red-500">{{ errors.price[0] }}</span>
                     </div>
                 </div>
+
                 <div class="px-4 my-4">
                     <div class="field-container h-80 w-100">
                         <textarea class="field rounded-md font-light pt-4" placeholder=" " id="description" cols="30" rows="10" v-model="description"></textarea>
@@ -38,6 +40,7 @@
                     </div>
                     <span v-if="errors.description" class="text-red-500">{{ errors.description[0] }}</span>
                 </div>
+
                 <div class="flex justify-end p-4">
                     <button @click="goBack" class="w-32 py-2 bg-red-500 text-white rounded-md mx-8">Cancel</button>
                     <button class="w-32 py-2 bg-green-500 text-white rounded-md ml-8">Save changes</button>
@@ -48,44 +51,44 @@
 </template>
 
 <script>
-import breadcrumb from './components/BreadcrumbComponent.vue';
+import breadcrumb from '../components/BreadcrumbComponent.vue';
 const default_layout = "default";
 
 export default {
     components: { breadcrumb },
     data() {
         return {
-            id: '',
-            name: '',
+            id:          '',
+            name:        '',
             description: '',
-            price: '',
-            crumbs: [
-                'home',
-                'products',
-                'product',
-                'product_edit'
+            price:       '',
+            crumbs:      [
+                            'home',
+                            'products',
+                            'product',
+                            'product_edit'
             ],
-            crumbTags: [
-                'home',
-                'products'
+            crumbTags:   [
+                            'home',
+                            'products'
             ],
-            errors: []
+            errors:      []
         }
     },
 
     created() {
         const url = new URL(window.location.href);
-        this.id = url.hash.match(/(\d+)/)[0];
+        this.id   = url.hash.match(/(\d+)/)[0];
 
         axios.get('/products/' + this.id)
             .then(({data}) => {
-                this.name = data.name;
+                this.name        = data.name;
                 this.description = data.description;
-                this.price = data.price;
-                this.errors = [];
+                this.price       = data.price;
+                this.errors      = [];
+
                 this.crumbTags.push(this.name);
                 this.crumbTags.push('Edit');
-
                 this.getCrumbs();
             })
             .catch((e) => {
@@ -110,9 +113,9 @@ export default {
         // Update the product.
         updateProduct() {
             axios.patch('/products/' + this.id, {
-                name: this.name,
+                name:        this.name,
                 description: this.description,
-                price: this.price
+                price:       this.price
             })
                 .then(() => {
                     this.goBack();

@@ -216,20 +216,8 @@ input[type="file"] {
     position: absolute;
     border-width: 0 0 1px 1px;
     border-color: #000;
-    /* left: 100%; */
-    /* top: 14%; */
     transform: rotate(45deg);
-    /* height: 80%;
-    width: 20%; */
 }
-
-/* .section-tag::after {
-    display: inline-block;
-    content: '<div><div>';
-    transform: rotate(45deg);
-    background-color: #000;
-
-} */
 
 .left-88 {
     left: 22rem;
@@ -241,4 +229,18 @@ input[type="file"] {
 
 input[type="file"] {
     font-weight: 400;
+}
+
+.loader {
+    border: 6px solid #3b82f6;
+    border-top: 6px solid #f3f3f3;
+    border-radius: 50%;
+    width: 1.75rem;
+    height: 1.75rem;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }

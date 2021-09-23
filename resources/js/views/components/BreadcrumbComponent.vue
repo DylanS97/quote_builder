@@ -16,12 +16,12 @@ export default {
     
     props: {
         crumbs: {
-            type: Array,
+            type:     Array,
             required: true
         },
 
         tags: {
-            type: Array,
+            type:     Array,
             required: true
         }
     },

@@ -20,7 +20,8 @@ class Quote extends Model
         'completed'
     ];
 
-    public function products() {
+    public function products() 
+    {
         return $this->hasMany(ProductQuote::class);
     }
 }

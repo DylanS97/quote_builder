@@ -4,6 +4,7 @@
             <h2 class="text-2xl font-medium">Shopping Cart</h2>
             <div class="title-tag bg-gray-100 h-10 w-10 top-1 left-60"></div>
         </div>
+        
         <div v-bind:class="{ 'overflow-y-scroll': scroll }" id="item-list" class="max-h-500 p-6">
             <div v-if="errors.cart && cart.length === 0" class="bg-white shadow-lg p-3 my-3 rounded-md text-red-500 text-center">
                 <span>{{ errors.cart[0] }}</span>
@@ -20,8 +21,8 @@
                     <i @click="addToCart(item, index)" class="fas fa-arrow-circle-right cursor-pointer"></i>
                 </span>
             </div>
-
         </div>
+
         <div class="absolute bottom-10 px-4 left-0 w-full">
             <div class="flex justify-between text-lg bg-white rounded-md p-4 my-2">
                 <h2 class="font-medium">Sub Total:</h2>

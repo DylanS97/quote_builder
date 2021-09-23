@@ -15,80 +15,21 @@
         
         <div class="max-w-7xl mx-auto w-100 mt-8 p-10 bg-white rounded-md">
             <div class="flex">
-                <div v-show="!show_products ? true : false" class="flex-1 rounded-md bg-gray-100 p-10 pl-0 pt-6">
-                    <div class="p-2 mb-8 bg-gray-300 pl-10 w-92 relative border-t border-b border-gray-600 overflow-hidden">
-                        <h2 class="text-2xl font-medium">Add Customer Details</h2>
-                        <div class="title-tag bg-gray-100 h-10 w-10 top-1 left-88"></div>
-                    </div>
-                    <div class="flex justify-between bg-white rounded-md mb-4 ml-10">
-                        <div class="p-4">
-                            <div class="field-container w-80 h-14">
-                                <input class="field rounded-md" type="text" id="first_name" placeholder=" " v-model="details['client_first_name']">
-                                <label for="first_name" class="label bg-white top-4">First Name: <span class="text-red-500">*</span></label>
-                            </div>
-                            <span v-if="errors.client_first_name" class="text-red-500">{{ errors.client_first_name[0] }}</span>
-                        </div>
-                        <div class="p-4">
-                            <div class="field-container w-80 h-14">
-                                <input class="field rounded-md" type="text" placeholder=" " id="last_name" v-model="details['client_last_name']">
-                                <label for="last_name" class="label bg-white top-4">Last Name: <span class="text-red-500">*</span></label>
-                            </div>
-                            <span v-if="errors.client_last_name" class="text-red-500">{{ errors.client_last_name[0] }}</span>
-                        </div>
-                    </div>
-                    <div class="flex justify-between bg-white rounded-md ml-10">
-                        <div class="p-4">
-                            <div class="field-container w-80 h-14">
-                                <input class="field rounded-md" type="text" placeholder=" " id="phone" v-model="details['client_phone']">
-                                <label for="phone" class="label bg-white top-4">Contact No: <span class="text-red-500">*</span></label>
-                            </div>
-                            <span v-if="errors.client_phone" class="text-red-500">{{ errors.client_phone[0] }}</span>
-                        </div>
-                        <div class="p-4">
-                            <div class="field-container w-80 h-14">
-                                <input class="field rounded-md" type="text" placeholder=" " id="email" v-model="details['client_email']">
-                                <label for="email" class="label bg-white top-4">Email: <span class="text-red-500">*</span></label>
-                            </div>
-                            <span v-if="errors.client_email" class="text-red-500">{{ errors.client_email[0] }}</span>
-                        </div>
-                    </div>
-                </div>
+                
+                <detailsTab v-show="!show_products ? true : false"
+                            :details="details"
+                            :errors="errors"></detailsTab>
 
-                <div v-show="show_products" class="flex-1 flex flex-col p-3 height-100% shadow-2xl bg-gray-100 rounded-md mx-w-800px">
+                <productsTab v-show="show_products"
+                             :product_items="product_items"
+                             :addToCart="addToCart">
+
                     <div class="field-container w-64 h-10 ml-2 mb-2">
                         <input @keyup="getProducts" v-model="search" type="text" id="product-search" placeholder=" " class="field rounded-md">
                         <label class="label bg-gray-100 top-2" for="product-search">Search Products</label>
                     </div>
-                    <div class="flex-1 overflow-y-scroll">
-                        <div v-if="product_items.length === 0" class="text-center p-6">
-                            <span class="text-2xl text-gray-400">No products to display</span>
-                        </div>
-                        <div class="grid grid-cols-3">
-                            <div
-                            class="product p-2 rounded-md m-2 shadow-lg bg-white" 
-                            v-for="(product, index) in product_items" :key="index">
-                                <div class="rounded-t-md overflow-hidden shadow-lg">
-                                    <img v-if="product.images.length === 0"
-                                        src="storage/images/ph.jpg" 
-                                        alt="Placeholder">
-                                    <img v-if="product.images.length > 0"
-                                        :src="'storage/product_images/' + product.images[0].source" 
-                                        :alt="product.images[0].alt">
-                                </div>
-                                <div class="flex justify-between py-4">
-                                    <div>
-                                        <span class="max-w-100 overflow-hidden product-name">{{ product.name | ucFirstLetter }}</span>
-                                    </div>
-                                    <div>
-                                        <span class="text-right" style="height: min-content;">{{ product.price | priceFormat }}</span>
-                                    </div>
-                                </div>
 
-                                <button @click="addToCart(product)" class="py-1 px-2 bg-green-500 rounded-md text-white text-sm float-right">Add to Cart</button>
-                            </div>
-                        </div><!-- /Product list -->
-                    </div>
-                </div>
+                </productsTab>
                 
                 <cart id="cart"
                       :errors="errors"
@@ -109,38 +50,42 @@
 </template>
 
 <script>
-const default_layout = "default";
-import breadcrumb from './components/BreadcrumbComponent.vue';
+import breadcrumb from '../components/BreadcrumbComponent.vue';
 import cart from './components/CartComponent.vue';
+import detailsTab from './components/DetailsTabComponent.vue';
+import productsTab from './components/ProductsTabComponent.vue';
+const default_layout = "default";
 
 export default {
     components: {
         cart,
-        breadcrumb
+        breadcrumb,
+        detailsTab,
+        productsTab
     },
 
     data() {
         return {
-            id: null,
+            id:            null,
             product_items: {},
-            search: '',
-            cart: {},
-            index: 0,
+            search:        '',
+            cart:          {},
+            index:         0,
             show_products: true,
-            details: {},
-            subTotal: 0,
-            errors: [],
-            crumbs: [
-                'home',
-                'quotes',
-                'quote',
-                'quote_edit'
+            details:       {},
+            subTotal:      0,
+            errors:        [],
+            crumbs:        [
+                                'home',
+                                'quotes',
+                                'quote',
+                                'quote_edit'
             ],
-            crumbTags: [
-                'home',
-                'quotes'
+            crumbTags:     [
+                                'home',
+                                'quotes'
             ],
-            scroll: false
+            scroll:        false
         }
     },
 
@@ -165,21 +110,24 @@ export default {
         // Gets ID from URL and gets quote details.
         getQuotes() {
             const url = new URL(window.location.href);
-            this.id = url.hash.match(/(\d+)/)[0];
+            this.id   = url.hash.match(/(\d+)/)[0];
 
             axios.get('/quotes/' + this.id)
                 .then(({data}) => {
                     data.products.forEach(product => {
                         this.cart[product.product_id] = product;
+
                         delete this.cart[product.product_id].created_at;
                         delete this.cart[product.product_id].updated_at;
                         delete this.cart[product.product_id].product_id;
-                        this.cartScroll();
                     });
 
-                    this.details = data;
-
+                    this.details  = data;
                     this.subTotal = data.sub_total;
+
+                    setTimeout(() => {
+                        this.cartScroll();
+                    });
                 })
         },
 
@@ -235,9 +183,9 @@ export default {
         addToCart(product, id = null) {
             axios.post('/cart', this.cartData(id ? id : product.id))
                 .then(({data}) => {
-                    this.cart = data[0];
+                    this.cart     = data[0];
                     this.subTotal = data[1];
-                    // this.cart.length++;
+
                     this.cartScroll();
                 })
                 .catch((e) => {
@@ -258,7 +206,7 @@ export default {
         decrease(id) {
             axios.patch('/cart/' + id, this.cartData(id))
                 .then(({data}) => {
-                    this.cart = data[0];
+                    this.cart     = data[0];
                     this.subTotal = data[1];
                 })
                 .catch((e) => {
@@ -270,9 +218,9 @@ export default {
         deleteFromCart(id) {
             axios.delete('/cart/' + id, { data: { cart: this.cart, sub_total: this.subTotal } })
                 .then(({data}) => {
-                    console.log(data[1]);
-                    this.cart = data[0];
+                    this.cart     = data[0];
                     this.subTotal = data[1];
+
                     this.cartScroll();
                 })
                 .catch((e) => {
@@ -282,10 +230,9 @@ export default {
 
         // Get the cart data.
         cartData(id) {
-            let data = {};
-
-            data['id'] = id;
-            data['cart'] = this.cart;
+            let data          = {};
+            data['id']        = id;
+            data['cart']      = this.cart;
             data['sub_total'] = this.subTotal;
 
             return data;
@@ -295,9 +242,8 @@ export default {
         generateData(cart, details) {
             details['sub_total'] = this.subTotal;
 
-            let params = {};
-
-            params['cart'] = cart;
+            let params        = {};
+            params['cart']    = cart;
             params['details'] = details;
 
             return params;
@@ -306,12 +252,12 @@ export default {
         // Updates the quote.
         updateQuote() {
             axios.patch('/quotes/' + this.id, {
-                sub_total: this.subTotal,
-                cart: this.cart,
+                sub_total:         this.subTotal,
+                cart:              this.cart,
                 client_first_name: this.details.client_first_name,
-                client_last_name: this.details.client_last_name,
-                client_email: this.details.client_email,
-                client_phone: this.details.client_phone
+                client_last_name:  this.details.client_last_name,
+                client_email:      this.details.client_email,
+                client_phone:      this.details.client_phone
             })
                 .then(() => {
                     this.errors = [];
