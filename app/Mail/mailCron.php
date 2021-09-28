@@ -6,20 +6,22 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class mailQuote extends Mailable
+class mailCron extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $quote;
+    public $date;
+    public $quotes;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($quote)
+    public function __construct($date, $quotes)
     {
-        $this->quote = $quote;
+        $this->date = $date;
+        $this->quotes = $quotes;
     }
 
     /**
@@ -29,6 +31,6 @@ class mailQuote extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.quote-mail');
+        return $this->markdown('emails.cron-mail');
     }
 }

@@ -65,7 +65,7 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        $product = $this->products->with('images')->find($id);
+        $product = $this->products->with('images')->findOrFail($id);
 
         return $product;
     }
@@ -81,7 +81,7 @@ class ProductController extends Controller
     {
         $attributes = $this->validateForm($request, $id);
 
-        $this->products->find($id)->update($attributes);
+        $this->products->findOrFail($id)->update($attributes);
     }
 
     /**
@@ -92,7 +92,7 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        $product = $this->products->find($id);
+        $product = $this->products->findOrFail($id);
         $product->images()->delete();
         $product->delete();
     }

@@ -67,7 +67,7 @@ class QuoteController extends Controller
      */
     public function show($id)
     {
-        return $this->quotes->with('products')->find($id);
+        return $this->quotes->with('products')->findOrFail($id);
     }
 
     /**
@@ -95,7 +95,7 @@ class QuoteController extends Controller
      */
     public function updateCompleted($id)
     {
-        $quote = $this->quotes->with('products')->find($id);
+        $quote = $this->quotes->with('products')->findOrFail($id);
         $quote->update(['completed' => $quote->completed === 1 ? 0 : 1]);
         return $quote;
     }

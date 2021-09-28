@@ -174,6 +174,7 @@ export default {
                 })
                 .catch((e) => {
                     console.log(e.response.data.message);
+                    window.location.hash = '#/quotes/404';
                 })
         },
 
@@ -218,13 +219,14 @@ export default {
             axios.get('/mail-quote/' + this.id, {
                 'quote': this.quote
             })
-                .then(({data}) => {
+                .then(() => {
                     this.mailing = false;
                     this.displaySuccess();
                 })
                 .catch(e => {
+                    this.mailing = false;
                     this.displayFailed();
-                    console.log(e);
+                    console.log(e.response.data.message);
                 })
         },
 

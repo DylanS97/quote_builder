@@ -118,6 +118,10 @@ export default {
                         this.cartScroll();
                     });
                 })
+                .catch(e => {
+                    console.log(e.response.data.message);
+                    window.location.hash = '#/quotes/404';
+                })
         },
 
         // Get the crumb text.

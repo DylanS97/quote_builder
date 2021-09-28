@@ -1,3 +1,5 @@
+
+// Minimize side navigation.
 function close_nav() {
     $('#navigation').addClass('minimized-nav-w');
     $('#page-content').addClass('minimized-nav-screen');
@@ -10,6 +12,7 @@ function close_nav() {
     }, 250);
 }
 
+// Maximize side navigation.
 function open_nav() {
     $('#navigation').removeClass('minimized-nav-w');
     $('#page-content').removeClass('minimized-nav-screen');
@@ -20,6 +23,7 @@ function open_nav() {
     $('#nav-control').css('transform', 'rotate(0)');
 }
 
+// Event listener for side navigation.
 let nav_open = true;
 
 $('#nav-control').on('click', function() {
@@ -32,6 +36,7 @@ $('#nav-control').on('click', function() {
     }
 });
 
+// Side navigation option drop downs.
 let nav_dropdown_triggers = Array.prototype.slice.call($('.nav-dropdown-trigger'));
 let nav_dropdown = Array.prototype.slice.call($('.nav-dropdown'));
 let nav_break = Array.prototype.slice.call($('.nav-break'));

@@ -119,6 +119,10 @@ export default {
                 this.crumbTags.push(data['name']);
                 this.getCrumbs();
             })
+            .catch(e => {
+                console.log(e.response.data.message);
+                window.location.hash = '#/products/404'
+            })
             
     },
 

@@ -15,6 +15,11 @@ const routes = [
         components: require('./views/quotes/Quotes')
     },
     {
+        path: '/quotes/404',
+        name: 'quote_not_found',
+        components: require('./views/errors/NotFound')
+    },
+    {
         path: '/quotes/:id',
         name: 'quote',
         components: require('./views/quotes/Quote')
@@ -35,6 +40,11 @@ const routes = [
         components: require('./views/products/Products')
     },
     {
+        path: '/products/404',
+        name: 'product_not_found',
+        components: require('./views/errors/NotFound')
+    },
+    {
         path: '/products/:id',
         name: 'product',
         components: require('./views/products/Product')
@@ -53,7 +63,7 @@ const routes = [
         path: '/products/:id/images',
         name: 'product_images',
         components: require('./views/products/ProductImages')
-    },
+    }
 ];
 
 export default new VueRouter({
