@@ -16,7 +16,7 @@
             <breadcrumb :crumbs="crumbs" :tags="crumbTags"></breadcrumb>
         </div>
 
-        <div class="flex max-w-7xl mx-auto p-10">
+        <div id="img-upload-cont" class="max-w-7xl mx-auto p-10">
             <form @submit.prevent="imageUpload" class="flex-1 p-4 pl-0 mr-4 bg-white rounded-md" action="javascript:;" method="post" enctype="multipart/form-data">
                 <header class="mb-4">
                     <div class="p-2 mb-4 bg-gray-300 pl-4 w-52 relative border-t border-b border-gray-600 overflow-hidden">
@@ -46,11 +46,11 @@
             </div>
         </div>
 
-        <div class="max-w-7xl mx-auto p-10">
+        <div id="uploaded-imgs-cont" class="max-w-7xl mx-auto p-10">
             <div v-if="images.length === 0" class="w-100 bg-white p-4 rounded-md text-center">
                 <span class="text-2xl font-medium text-gray-400">No images for product.</span>
             </div>
-            <div v-if="images.length > 0" class="w-100 grid grid-cols-4 bg-white p-4 rounded-md" style="grid-gap: 30px;">
+            <div v-if="images.length > 0" class="images w-100 grid grid-cols-4 bg-white p-4 rounded-md" style="grid-gap: 30px;">
                 <div class="relative" v-for="(image, index) in images" :key="index">
                     <img class="p-2" :src="'storage/product_images/' + image.source" :alt="image.alt">
                     <form @submit.prevent="showDeleteModal(image)" class="">
@@ -63,7 +63,7 @@
         </div>
         
         <div class="max-w-7xl mx-auto flex justify-end px-2">
-            <button @click="goBack" class="w-32 py-2 bg-green-500 text-white rounded-md mx-8">Done</button>
+            <button @click="goBack" class="w-32 py-2 bg-green-500 text-white rounded-md mx-8 mb-8">Done</button>
         </div>
     </div>
 </template>
@@ -157,7 +157,6 @@ export default {
                     this.errors = [];
                     $('#preview-image').attr('src', 'storage/images/ph.jpg');
                     $('#image-input').val('');
-                    console.log($('#image-input')[0]);
                     this.alt    = '';
                     this.getImages();
                 })

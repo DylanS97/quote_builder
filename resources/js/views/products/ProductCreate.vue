@@ -41,8 +41,8 @@
                     <span v-if="errors.description" class="text-red-500">{{ errors.description[0] }}</span>
                 </div>
 
-                <div class="flex justify-end p-4">
-                    <button @click="goBack" class="w-32 py-2 bg-red-500 text-white rounded-md mx-8">Cancel</button>
+                <div class="prod-create-edit-btns p-4">
+                    <button @click="goBack" class="w-32 py-2 bg-red-500 text-white rounded-md mr-8">Cancel</button>
                     <button class="w-32 py-2 bg-green-500 text-white rounded-md ml-8">Save changes</button>
                 </div>
             </form>

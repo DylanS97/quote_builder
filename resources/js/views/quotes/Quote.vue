@@ -72,7 +72,7 @@
                 </div>
             </div>
 
-            <div class="shadow-2xl bg-gray-50 w-100 p-10">
+            <div id="quote-cont" class="shadow-2xl bg-gray-50 w-100 p-10">
                 <div class="w-100 p-5 border-8 border-gray-400 bg-white">
                     <h1 class="text-xl font-medium py-5 mb-5 border-b border-gray-300">Quote Details</h1>
                     <div class="flex justify-between p-2">

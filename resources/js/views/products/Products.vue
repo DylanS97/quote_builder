@@ -1,5 +1,5 @@
 <template>
-    <div class="width-full">
+    <div id="products-page" class="width-full">
         <!-- Page Heading -->
         <header class="bg-white shadow">
             <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
@@ -13,17 +13,17 @@
             <breadcrumb :crumbs="crumbs" :tags="crumbTags"></breadcrumb>
         </div>
 
-        <div class="max-w-7xl mx-auto p-10 pb-0 flex justify-between">
-            <div>
-                <select @change="getSelectedPaginate($event)" name="pagination" id="pagination" class="rounded-md cursor-pointer">
-                    <option v-for="size in pageSizes" :key="size" :value="size">
-                        {{ size }}
-                    </option>
-                </select>
-            </div>
+        <div class="filters-search-cont max-w-7xl mx-auto p-10 pb-0">
+            <div class="filter-sort-cont">
+                <div class="mr-3">
+                    <select @change="getSelectedPaginate($event)" name="pagination" id="pagination" class="rounded-md cursor-pointer">
+                        <option v-for="size in pageSizes" :key="size" :value="size">
+                            {{ size }}
+                        </option>
+                    </select>
+                </div>
 
-            <div class="flex">
-                <div class="mx-3">
+                <div class="">
                     <select @change="getSelectedFilter($event)" name="category" id="category" class="rounded-md">
                         <option value="" :selected="!filter" disabled>-- Select Category --</option>
                         <option value="DESC">Latest to Oldest</option>
@@ -31,7 +31,10 @@
                         <option value="">No filter</option>
                     </select>
                 </div>
-                <div class="field-container w-64 h-full ml-2 mb-2">
+            </div>
+
+            <div class="flex justify-between">
+                <div class="field-container w-64 h-full mb-2">
                     <input @keyup="getResults" v-model="search" type="text" id="product-search" placeholder=" " class="field rounded-md">
                     <label class="label bg-gray-100 top-2" for="product-search">Search</label>
                 </div>
@@ -45,14 +48,14 @@
             <span class="text-green-400">Processing...</span>
         </div>
         
-        <div class="max-w-7xl p-10 mx-auto grid grid-cols-5" style="grid-gap: 30px;">
+        <div class="max-w-7xl p-10 mx-auto grid small-grid grid-cols-5" style="grid-gap: 30px;">
             <router-link :to="{ name: 'product', params: { id: product.id } }" 
                          class="product p-2 full-shadow rounded-md" 
                          v-for="(product, index) in product_items" :key="index">
                 <div class="rounded-t-md overflow-hidden shadow-lg">
-                    <img v-if="product.images[0]" :src="'storage/product_images/' + product.images[0].source" 
+                    <img class="mx-auto" v-if="product.images[0]" :src="'storage/product_images/' + product.images[0].source" 
                          :alt="product.images[0].alt">
-                    <img v-if="!product.images[0]" src="storage/images/ph.jpg" 
+                    <img class="mx-auto" v-if="!product.images[0]" src="storage/images/ph.jpg" 
                          alt="Placeholder">
                 </div>
                 <div class="flex justify-between py-4">

@@ -1,0 +1,86 @@
+/** 
+    Quotes Styles 
+*/
+
+.large-fields-cont {
+    display: flex;
+    > div {
+        flex-grow: 1fr;
+        .field-container, .field-container > input {
+            width: 100%;
+        }
+    }
+}
+
+.products-cart-cont {
+    display: flex;
+}
+
+#cart {
+    position: relative;
+    float: right;
+    height: calc(100vh - 500px);
+    width: 24rem;
+    min-width: 300px;
+}
+
+#cart-inner-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 90%;
+}
+
+/**
+    Media Queries (includes styles for products tab (quote create/edit).
+    Some of the product tab styles are used for the products page.
+*/
+main#page-content {
+    @media screen and (max-width: 1356px) {
+        #products-tab, #products-page {
+            .small-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+        .large-fields-cont {
+            display: block;
+            .field-container {
+                margin: 0 auto;
+            }
+        }
+    }
+    @media screen and (max-width: 1160px) {
+        .products-cart-cont {
+            flex-direction: column-reverse;
+        }
+        .product-tab-products {
+            max-height: 50vh;
+        }
+        #cart {
+            height: 50vh;
+            width: 100%;
+            min-width: 100%;
+            margin: 0 0 40px 0;
+        }
+    }
+    @media screen and (max-width: 940px) {
+        .quotes-table {
+            font-size: .625rem;
+        }
+        #pagination-cont {
+            font-size: .625rem;
+            & a {
+                padding: 2px 8px;
+            }
+        }
+        #quote-cont {
+            font-size: .75rem;
+            & h1 {
+                font-size: 1rem;
+            }
+            th, td {
+                padding: 8px 4px;
+            }
+        }
+    }
+}

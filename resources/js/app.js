@@ -86,8 +86,13 @@ Vue.mixin({
 
         // Adds overflow scroll to cart when height gets above 544px.
         cartScroll() {
-            let height = $('#item-list').height();
-            if(height >= 440) {
+            let container = $('#cart-inner-container').height();
+            let list = $('#item-list').height() + 48;
+            let totals = $('#total-container').height();
+
+            let freeHeight = container - totals - 48;
+
+            if(list >= freeHeight) {
                 this.scroll = true;
             } else {
                 this.scroll = false;

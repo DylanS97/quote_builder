@@ -1,5 +1,5 @@
 <template>
-    <nav aria-label="Page navigation example" class="flex justify-between mt-4">
+    <nav id="pagination-cont" aria-label="Page navigation example" class="flex justify-between mt-4">
         <div class="flex flex-col justify-center border border-gray-250 px-2 bg-white rounded-md">
             <span class="text-blue-400">Showing {{ meta.from }} to {{ meta.to }} of {{ meta.total }} entries</span>
         </div>

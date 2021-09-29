@@ -14,7 +14,7 @@
         </div>
         
         <div class="max-w-7xl mx-auto w-100 mt-8 p-10 bg-white rounded-md">
-            <div class="flex">
+            <div class="products-cart-cont">
                 
                 <detailsTab v-show="!show_products ? true : false"
                             :details="details"
@@ -101,7 +101,9 @@ export default {
                     this.cart     = data[0];
                     this.subTotal = data[1];
 
-                    this.cartScroll();
+                    setTimeout(() => {
+                        this.cartScroll();
+                    });
                 })
                 .catch((e) => {
                     console.log(e.response.data.message);

@@ -32,7 +32,7 @@
                         <span class="text-green-400">Processing...</span>
                     </div>
 
-                    <table v-if="data_length" class="w-full bg-white">
+                    <table v-if="data_length" class="quotes-table w-full bg-white">
                         <thead>
                             <tr>
                                 <th class="border border-gray-300 font-medium p-2">ID</th>
@@ -53,15 +53,17 @@
                                 <td class="text-center font-light border border-gray-300 p-1">{{ quote.created_at | dateFormat }}</td>
                                 <td class="text-center font-light border border-gray-300 p-1" v-text="quote.completed"></td>
                                 <td class="text-center font-light border border-gray-300 p-1">
-                                    <router-link :to="{ name: 'quote', params: { id: quote.id } }">
-                                        <i class="fas fa-eye mr-2 text-yellow-400"></i>
-                                    </router-link>
-                                    <router-link :to="{ name: 'quote_edit', params: { id: quote.id } }">
-                                        <i class="fas fa-edit mx-2 text-green-500"></i>
-                                    </router-link>
-                                    <button @click="showDeleteModal(quote)">
-                                        <i class="far fa-trash-alt ml-2 text-red-500"></i>
-                                    </button>
+                                    <div class="flex justify-around">
+                                        <router-link :to="{ name: 'quote', params: { id: quote.id } }">
+                                            <i class="fas fa-eye mr-2 text-yellow-400"></i>
+                                        </router-link>
+                                        <router-link :to="{ name: 'quote_edit', params: { id: quote.id } }">
+                                            <i class="fas fa-edit mx-2 text-green-500"></i>
+                                        </router-link>
+                                        <button @click="showDeleteModal(quote)">
+                                            <i class="far fa-trash-alt ml-2 text-red-500"></i>
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>

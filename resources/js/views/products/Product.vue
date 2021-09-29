@@ -30,8 +30,8 @@
                 </div>
             </div>
 
-            <div class="flex min-h-300">
-                <div class="flex-1 shadow-xl bg-white rounded-md m-3 ml-0 p-4 pl-0 relative">
+            <div id="product-det-img-cont" class="min-h-300">
+                <div class="prod-details flex-1 shadow-xl bg-white rounded-md m-3 ml-0 p-4 pl-0 relative">
                     <div class="p-2 mb-4 bg-gray-300 pl-4 w-52 relative border-t border-b border-gray-600 overflow-hidden">
                         <h1 class="text-lg font-normal">Details</h1>
                         <div class="title-tag bg-white h-9 w-9 top-1 left-48"></div>
@@ -48,17 +48,17 @@
                     </div>
                 </div>
 
-                <div class="flex-1 shadow-xl bg-white rounded-md m-3 mr-0 p-4 pl-0">
+                <div id="prod-imgs-cont" class="flex-1 shadow-xl bg-white rounded-md m-3 mr-0 p-4 pl-0">
                     <div class="p-2 mb-4 bg-gray-300 pl-4 w-52 relative border-t border-b border-gray-600 overflow-hidden">
                         <h1 class="text-lg font-normal">Images</h1>
                         <div class="title-tag bg-white h-9 w-9 top-1 left-48"></div>
                     </div>
                     <div class="flex">
-                        <div class="flex-1 mx-auto" style="max-width: 400px;">
+                        <div id="img-cont" class="flex-1 mx-auto pl-4" style="width: 75%;">
                             <img @load="getHeight" v-if="imageTotal === 0" id="image-preview" class="w-full h-auto" src="/storage/images/ph.jpg">
                             <img @load="getHeight" v-if="imageTotal > 0" id="image-preview" class="w-full h-auto" :src="'/storage/product_images/' + product.images[0].source" :alt="product.images[0].alt">
                         </div>
-                        <div id="image-scroll" v-if="imageTotal > 1" class="overflow-y-scroll px-2 h-50" style="width: 150px;">
+                        <div id="image-scroll" v-if="imageTotal > 1" class="overflow-y-scroll px-2 h-50" style="width: 25%;">
                             <div class="" v-for="(image, index) in product.images" :key="index">
                                 <img v-if="index >= 1" class="cursor-pointer my-1" @click="imageSwap" :src="'/storage/product_images/' + image.source" :alt="image.alt">
                             </div>
@@ -67,7 +67,7 @@
                 </div>
             </div>
 
-            <div class="w-100 shadow-xl bg-white rounded-md mt-3 p-4 pl-0">
+            <div id="prod-desc-cont" class="w-100 shadow-xl bg-white rounded-md mt-3 p-4 pl-0">
                 <div class="p-2 mb-6 bg-gray-300 pl-4 w-56 relative border-t border-b border-gray-600 overflow-hidden">
                     <h1 class="text-lg font-normal">Description</h1>
                     <div class="title-tag bg-white h-9 w-9 top-1 left-52"></div>

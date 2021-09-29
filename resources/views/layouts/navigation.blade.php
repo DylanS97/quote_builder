@@ -55,7 +55,7 @@
         </div>
 
         <!-- Responsive Settings Options -->
-        <div class="bottom-0 pt-4 pb-1 border-t border-gray-200">
+        <div class="bottom-0 pb-1 border-t-4 border-red-500">
             <div class="mt-3 space-y-1">
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">

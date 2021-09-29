@@ -59,4 +59,3 @@ nav_dropdown_triggers.forEach((nav_dropdown_trigger, index) => {
         }
     })
 });
-

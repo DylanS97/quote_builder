@@ -1,0 +1,70 @@
+/**
+    Search Bar Styles
+*/
+
+.field-container {
+    position: relative;
+}
+
+.field {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 1px solid #bbb;
+    outline: none;
+    background: none;
+}
+
+.field:hover {
+    border-color: #888;
+}
+
+.field:focus {
+    border: 1px solid #555;
+}
+
+.label {
+    position: absolute;
+    left: 1rem;
+    padding: 0 0.5rem;
+    color: #aaa;
+    cursor: text;
+    border-radius: 10px;
+    transition: top 200ms ease-in,
+        left 200ms ease-in,
+        font-size 200ms ease-in;
+    
+}
+
+.field:focus ~ .label,
+.field:not(:placeholder-shown).field:not(:focus) ~label {
+    top: -.5rem;
+    font-size: 0.8rem;
+    color: black;
+    left: 0.8rem;
+    --tw-ring-offset-color: #fff;
+}
+
+[type='text']:focus, [type='email']:focus, [type='url']:focus, [type='password']:focus, [type='number']:focus, [type='date']:focus, [type='datetime-local']:focus, [type='month']:focus, [type='search']:focus, [type='tel']:focus, [type='time']:focus, [type='week']:focus, [multiple]:focus, textarea:focus, select:focus {
+  outline: none;
+  outline-offset: 0px;
+  --tw-ring-inset: var(--tw-empty,/*!*/ /*!*/);
+  --tw-ring-offset-width: 0px;
+  --tw-ring-color: #555;
+  --tw-ring-offset-shadow: none;
+  box-shadow: none;
+  border-color: #555;
+}
+
+[type='text'], [type='email'], [type='url'], [type='password'], [type='number'], [type='date'], [type='datetime-local'], [type='month'], [type='search'], [type='tel'], [type='time'], [type='week'], [multiple], textarea, select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: unset;
+    border-color: #999;
+    border-width: 1px;
+    font-size: 1rem;
+    line-height: 1.5rem;
+}
