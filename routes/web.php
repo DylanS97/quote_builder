@@ -24,21 +24,21 @@ Route::get('/login', function() {
 });
 
 Route::middleware(['auth'])->group(function() {
-    Route::resource('quotes', QuoteController::class)->middleware(['auth']);
-    Route::resource('products', ProductController::class)->middleware(['auth']);
-    Route::resource('product_images', ProductImageController::class)->middleware(['auth']);
-    Route::resource('cart', CartController::class)->middleware(['auth']);
-    Route::resource('crumbs', CrumbsController::class)->middleware(['auth']);
+    Route::resource('quotes', QuoteController::class);
+    Route::resource('products', ProductController::class);
+    Route::resource('product_images', ProductImageController::class);
+    Route::resource('cart', CartController::class);
+    Route::resource('crumbs', CrumbsController::class);
     
-    Route::get('{id}/images', [ProductImageController::class, 'index'])->middleware(['auth']);
+    Route::get('{id}/images', [ProductImageController::class, 'index']);
     
-    Route::post('{id}/images/create', [ProductImageController::class, 'store'])->middleware(['auth']);
+    Route::post('{id}/images/create', [ProductImageController::class, 'store']);
     
-    Route::get('mail-quote/{id}', [QuoteController::class, 'mailQuote'])->middleware(['auth']);
+    Route::get('mail-quote/{id}', [QuoteController::class, 'mailQuote']);
     
-    Route::patch('/quote-completed/{id}', [QuoteController::class, 'updateCompleted'])->middleware(['auth']);
+    Route::patch('/quote-completed/{id}', [QuoteController::class, 'updateCompleted']);
     
-    Route::get('/{any}', [PagesController::class, 'index'])->middleware(['auth'])->where('any', '.*');
+    Route::get('/{any}', [PagesController::class, 'index'])->where('any', '.*');
 });
 
 require __DIR__.'/auth.php';
