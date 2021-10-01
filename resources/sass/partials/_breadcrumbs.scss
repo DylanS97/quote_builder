@@ -1,0 +1,12 @@
+/**
+    Breadcrumb Links
+*/
+
+.crumb_links::after {
+    content: '/';
+}
+
+.is_last {
+    color: black;
+    cursor: not-allowed;
+}

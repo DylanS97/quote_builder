@@ -1,0 +1,15 @@
+/**
+    Side Bar Styles
+*/
+
+.w-full-w-nav {
+    width: calc(100% - 15rem);
+}
+
+.minimized-nav-w {
+    width: 75px;
+}
+
+.minimized-nav-screen {
+    width: calc(100% - 75px);
+}

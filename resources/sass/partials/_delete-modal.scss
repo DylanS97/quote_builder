@@ -1,0 +1,18 @@
+/**
+    Delete modal
+*/
+
+.center-screen {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    top: 50%;
+    width: 350px;
+    height: 200px;
+    background-color: #aaa;
+}
+
+.bg-gradient-shadow {
+    background-color: #000;
+    opacity: .8
+}
